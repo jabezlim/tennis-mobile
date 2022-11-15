@@ -1,0 +1,63 @@
+{
+  "name": "kiosk",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "set PORT=3001 && react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "@apollo/client": "^3.5.10",
+    "@bootpay/client-js": "^4.1.5",
+    "@date-io/date-fns": "^2.13.1",
+    "@emotion/react": "^11.8.2",
+    "@emotion/styled": "^11.8.1",
+    "@mui/lab": "^5.0.0-alpha.73",
+    "@mui/material": "^5.5.1",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.4",
+    "@testing-library/user-event": "^13.5.0",
+    "crypto-js": "^4.1.1",
+    "date-fns": "^2.28.0",
+    "formik": "^2.2.9",
+    "graphql": "^16.3.0",
+    "lodash": "^4.17.21",
+    "material-ui-popup-state": "^2.0.0",
+    "numeral": "^2.0.6",
+    "react": "^17.0.2",
+    "react-device-detect": "^2.1.2",
+    "react-dom": "^17.0.2",
+    "react-infinite-scroller": "^1.2.5",
+    "react-qr-code": "^2.0.8",
+    "react-router-dom": "^6.2.2",
+    "react-scripts": "5.0.0",
+    "simplebar-react": "^2.3.6",
+    "web-vitals": "^2.1.4",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@iconify/icons-eva": "^1.2.2",
+    "@iconify/icons-fluent": "^1.2.4",
+    "@iconify/react": "^3.2.2"
+  }
+}

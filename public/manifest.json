@@ -1,0 +1,20 @@
+{
+  "short_name": "Tennis Squad",
+  "name": "Tennis Squad",
+  "icons": [
+    {
+      "src": "images/icon/logo_ball512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "images/icon/logo_ball150x149.png",
+      "type": "image/png",
+      "sizes": "150x149"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
