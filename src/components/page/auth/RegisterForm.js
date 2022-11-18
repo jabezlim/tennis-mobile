@@ -120,7 +120,7 @@ const RegisterForm = () => {
   useEffect(() => {
     if (count === 0 && message.open) {
       settingMessage('open', false);
-      navigate(path.urls.login);
+      navigate(id ? `${path.urls.login}/${id}` : path.urls.login);
     }
     // eslint-disable-next-line
   }, [count]);
