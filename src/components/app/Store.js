@@ -51,7 +51,7 @@ const Store = ({
   };
 
   const handleStoreData = (id) => {
-    if (handleStore) {
+    if (handleStore && id>0) {
       const name = storeNames[id].name;
       handleStore(id, name);
     }

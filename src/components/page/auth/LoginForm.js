@@ -75,7 +75,7 @@ const LoginForm = ({handleStore}) => {
   useEffect(() => {
     if (storeid) {
       setId(storeid);
-    } else setId('4');
+    } else setId('0');
   }, [storeid]);
 
   const handleShowPassword = () => {

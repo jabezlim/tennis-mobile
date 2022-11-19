@@ -113,7 +113,7 @@ const ConfirmCode = ({
 
     if (phone && phone.length > 9 && store) {
       const variables = {
-        store: store,
+        store: parseInt(store),
         phone: phone,
       };
       if (isMember) {

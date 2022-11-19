@@ -66,7 +66,7 @@ const PasswordForm = ({storeName}) => {
       if (confirmCode && confirmCode.length === 6) {
         passwordInquiry({
           variables: {
-            store: values.store,
+            store: parseInt(id),
             phone: values.phone,
             code: confirmCode,
           },
@@ -102,7 +102,7 @@ const PasswordForm = ({storeName}) => {
 
   useEffect(() => {
     if (count === 0 && openMessage) {
-      navigate(path.urls.login);
+      navigate(id ? `${path.urls.login}/${id}` : path.urls.login);
     }
     // eslint-disable-next-line
   }, [count]);
@@ -146,7 +146,7 @@ const PasswordForm = ({storeName}) => {
               }
             />
             <ConfirmCode
-              store={getFieldProps('store').value}
+              store={storeid}
               phone={getFieldProps('phone').value}
               isMember={true}
               setConfirmCode={setConfirmCode}

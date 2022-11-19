@@ -90,7 +90,7 @@ const RegisterForm = ({storeName}) => {
       if (confirmCode && confirmCode.length === 6) {
         register({
           variables: {
-            storeId: values.store,
+            storeId: parseInt(id),
             phone: values.phone,
             password: values.password,
             code: confirmCode,
@@ -195,7 +195,7 @@ const RegisterForm = ({storeName}) => {
               helperText={touched.password && errors.password}
             />
             <ConfirmCode
-              store={getFieldProps('store').value}
+              store={storeid}
               phone={getFieldProps('phone').value}
               setConfirmCode={setConfirmCode}
               handleConfirm={handleConfirmCode}
