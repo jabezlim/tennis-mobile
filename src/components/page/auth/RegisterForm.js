@@ -11,6 +11,7 @@ import {
   InputAdornment,
   Stack,
   TextField,
+  Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // form
@@ -40,7 +41,7 @@ const INIT_VALUES = {
   password: '',
   terms: false,
 };
-const RegisterForm = () => {
+const RegisterForm = ({storeName}) => {
   const navigate = useNavigate();
   const { storeid } = useParams();
   const phoneRef = useRef();
@@ -156,8 +157,11 @@ const RegisterForm = () => {
     <>
       <FormikProvider value={formik}>
         <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
-          <Stack spacing={2}>
-            <Store required storeId={id} handleStore={handleChangeStore} />
+          <Stack spacing={2}>    
+            {        
+              storeName ? <Typography>지점명 : {storeName}</Typography> 
+              : <Store required storeId={id} handleStore={handleChangeStore} disabled={true} />
+            }
             <TextField
               fullWidth
               color='tennis'

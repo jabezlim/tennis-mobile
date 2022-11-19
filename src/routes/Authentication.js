@@ -30,11 +30,19 @@ const Authentication = {
       element: <Password />,
     },
     {
+      path: `${path.urls.pwInquiry}/:storeid/:storename`,
+      element: <Password />,
+    },
+    {
       path: path.urls.register,
       element: <Register />,
     },
     {
       path: `${path.urls.register}/:storeid`,
+      element: <Register />,
+    },
+    {
+      path: `${path.urls.register}/:storeid/:storename`,
       element: <Register />,
     },
   ],

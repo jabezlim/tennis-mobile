@@ -10,6 +10,7 @@ import {
   InputAdornment,
   Stack,
   TextField,
+  Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // form
@@ -29,14 +30,15 @@ import { storeDataVar } from 'helpers/cache';
 import { path } from 'config/path';
 import { useEffect } from 'react';
 
-const LoginForm = () => {
+const LoginForm = ({handleStore}) => {
   const navigate = useNavigate();
   const { storeid } = useParams();
   // data
   const [id, setId] = useState();
+  const [name, setName] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState();
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(true);  
   // graphql
   const [login, { loading }] = useMutation(LOGIN_QUERY, {
     onCompleted: (data) => {
@@ -79,8 +81,12 @@ const LoginForm = () => {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
-  const handleChangeStore = (storeId) => {
+  const handleChangeStore = (storeId, storeName) => {
     setFieldValue('store', storeId);
+    setName(storeName);
+    if (handleStore) {      
+      handleStore(storeId, storeName);
+    }
   };
 
   const { errors, touched, handleSubmit, getFieldProps, setFieldValue } =
@@ -96,6 +102,10 @@ const LoginForm = () => {
             handleStore={handleChangeStore}
             //disabled={!!id}
           />
+          <br />
+        </Stack>
+        {!name ? <Stack spacing={20}><Typography>&nbsp;</Typography> <Typography>&nbsp;</Typography></Stack> :  
+        <Stack spacing={2}>
           <TextField
             fullWidth
             autoFocus
@@ -147,8 +157,8 @@ const LoginForm = () => {
           >
             로그인
           </LoadingButton>
-          {message && <Alert severity='error'>{message}</Alert>}
-        </Stack>
+          {message && <Alert severity='error'>{message}</Alert>}          
+        </Stack>}
       </Form>
     </FormikProvider>
   );

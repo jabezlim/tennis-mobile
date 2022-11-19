@@ -14,14 +14,17 @@ import AuthFooter from './AuthFooter';
 
 const Password = () => {
   const { storeid } = useParams();
+  const { storename } = useParams();
   // data
   const [id, setId] = useState();
+  const [name, setName] = useState();
 
   useEffect(() => {
     if (storeid) {
       setId(storeid);
+      setName(storename);
     }
-  }, [storeid]);
+  }, [storeid, storename]);
 
   return (
     <AuthWrapper>
@@ -50,7 +53,7 @@ const Password = () => {
                     <Logo ball />
                   </Grid>
                   <Grid item xs={12}>
-                    <PasswordForm />
+                    <PasswordForm storeName={name} />
                   </Grid>
                   <Grid item xs={12}>
                     <Divider />
@@ -81,7 +84,7 @@ const Password = () => {
                           component={Link}
                           to={
                             id
-                              ? `${path.urls.register}/${id}`
+                              ? `${path.urls.register}/${id}/${name}`
                               : path.urls.register
                           }
                           variant='subtitle1'

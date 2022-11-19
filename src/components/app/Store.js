@@ -43,12 +43,13 @@ const Store = ({
       setStore(id);
       handleStoreData(id);
     }
-  }, [stores, storeNames]);
+  }, [stores, storeNames, allitem, storeId]);
 
   const handleChange = (event) => {
     setStore(event.target.value);
     handleStoreData(event.target.value);
   };
+
   const handleStoreData = (id) => {
     if (handleStore) {
       const name = storeNames[id].name;
@@ -57,7 +58,7 @@ const Store = ({
   };
 
   return (
-    <Box sx={{ width: '100%', ...sx }}>
+    <Box sx={{ width: '100%', ...sx }}>      
       <FormControl
         fullWidth
         color='tennis'

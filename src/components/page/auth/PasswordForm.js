@@ -25,7 +25,7 @@ const INIT_VALUES = {
   password: '',
   terms: false,
 };
-const PasswordForm = () => {
+const PasswordForm = ({storeName}) => {
   const navigate = useNavigate();
   const phoneRef = useRef();
   const { storeid } = useParams();
@@ -128,7 +128,10 @@ const PasswordForm = () => {
       <FormikProvider value={formik}>
         <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
           <Stack spacing={2}>
-            <Store required storeId={id} handleStore={handleChangeStore} />
+            {        
+              storeName ? <Typography>지점명 : {storeName}</Typography> 
+              : <Store required storeId={id} handleStore={handleChangeStore} disabled={true} />
+            }          
             <TextField
               fullWidth
               color='tennis'

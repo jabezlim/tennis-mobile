@@ -16,12 +16,18 @@ const Login = () => {
   const { storeid } = useParams();
   // data
   const [id, setId] = useState();
+  const [name, setName] = useState();
 
   useEffect(() => {
     if (storeid) {
       setId(storeid);
     }
   }, [storeid]);
+
+  const handleChangeStore = (storeId, storeName) => {
+    setId(storeId);
+    setName(storeName);
+  };
 
   return (
     <AuthWrapper>
@@ -50,7 +56,7 @@ const Login = () => {
                     <Logo ball />
                   </Grid>
                   <Grid item xs={12}>
-                    <LoginForm />
+                    <LoginForm handleStore={handleChangeStore}/>
                   </Grid>
                   <Grid item xs={12}>
                     <Divider />
@@ -68,7 +74,7 @@ const Login = () => {
                           component={Link}
                           to={
                             id
-                              ? `${path.urls.pwInquiry}/${id}`
+                              ? `${path.urls.pwInquiry}/${id}/${name}`
                               : path.urls.pwInquiry
                           }
                           variant='subtitle1'
@@ -85,7 +91,7 @@ const Login = () => {
                           component={Link}
                           to={
                             id
-                              ? `${path.urls.register}/${id}`
+                              ? `${path.urls.register}/${id}/${name}`
                               : path.urls.register
                           }
                           variant='subtitle1'
