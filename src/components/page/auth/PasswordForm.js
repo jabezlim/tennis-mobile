@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 // material
-import { Stack, TextField, Typography } from '@mui/material';
+import { Box, Stack, TextField, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // form
 import { useFormik, Form, FormikProvider } from 'formik';
@@ -25,10 +25,10 @@ const INIT_VALUES = {
   password: '',
   terms: false,
 };
-const PasswordForm = ({storeName}) => {
+const PasswordForm = ({ setStoreId, setStoreName }) => {
   const navigate = useNavigate();
   const phoneRef = useRef();
-  const { storeid } = useParams();
+  const { storeid, storename } = useParams();
   // data
   const [id, setId] = useState();
   const [message, setMessage] = useState();
@@ -110,13 +110,17 @@ const PasswordForm = ({storeName}) => {
   useEffect(() => {
     if (storeid) {
       setId(storeid);
-    } else setId('4');
+      handleChangeStore(storeid);
+    } else setId('0');
+    // eslint-disable-next-line
   }, [storeid]);
 
   const handleConfirmCode = (type) => {
     if (type === 'check_phone') phoneRef.current.focus();
   };
-  const handleChangeStore = (storeId) => {
+  const handleChangeStore = (storeId, name) => {
+    setStoreId(storeId);
+    if (name) setStoreName(name);
     setFieldValue('store', storeId);
   };
 
@@ -128,40 +132,53 @@ const PasswordForm = ({storeName}) => {
       <FormikProvider value={formik}>
         <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
           <Stack spacing={2}>
-            {        
-              storeName ? <Typography>지점명 : {storeName}</Typography> 
-              : <Store required storeId={id} handleStore={handleChangeStore} disabled={true} />
-            }          
-            <TextField
-              fullWidth
-              color='tennis'
-              autoComplete='phone'
-              type='text'
-              inputRef={phoneRef}
-              label='핸드폰 번호 *'
-              {...getFieldProps('phone')}
-              error={Boolean(touched.phone && errors.phone)}
-              helperText={
-                touched.phone && errors.phone !== 'required' && errors.phone
-              }
-            />
-            <ConfirmCode
-              store={storeid}
-              phone={getFieldProps('phone').value}
-              isMember={true}
-              setConfirmCode={setConfirmCode}
-              handleConfirm={handleConfirmCode}
-            />
-            <LoadingButton
-              fullWidth
-              size='large'
-              type='submit'
-              color='tennis'
-              variant='contained'
-              loading={loading}
-            >
-              새로운 비밀번호 받기
-            </LoadingButton>
+            {storename && <Typography>지점명 : {storename}</Typography>}
+            {!storename && (
+              <Store
+                required
+                storeId={id}
+                handleStore={handleChangeStore}
+                disabled={!!storeid}
+              />
+            )}
+            {!getFieldProps('store').value && (
+              <Box sx={{ width: 350, height: 150 }} />
+            )}
+            {getFieldProps('store').value && (
+              <>
+                <TextField
+                  fullWidth
+                  autoFocus
+                  color='tennis'
+                  autoComplete='phone'
+                  type='text'
+                  inputRef={phoneRef}
+                  label='핸드폰 번호 *'
+                  {...getFieldProps('phone')}
+                  error={Boolean(touched.phone && errors.phone)}
+                  helperText={
+                    touched.phone && errors.phone !== 'required' && errors.phone
+                  }
+                />
+                <ConfirmCode
+                  store={storeid}
+                  phone={getFieldProps('phone').value}
+                  isMember={true}
+                  setConfirmCode={setConfirmCode}
+                  handleConfirm={handleConfirmCode}
+                />
+                <LoadingButton
+                  fullWidth
+                  size='large'
+                  type='submit'
+                  color='tennis'
+                  variant='contained'
+                  loading={loading}
+                >
+                  새로운 비밀번호 받기
+                </LoadingButton>
+              </>
+            )}
           </Stack>
         </Form>
       </FormikProvider>

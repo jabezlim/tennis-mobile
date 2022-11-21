@@ -28,7 +28,7 @@ import signOut24Regular from '@iconify/icons-fluent/sign-out-24-regular';
 import { MainCard } from 'components/ui/cards';
 import { Transitions } from 'components/ui/extended';
 // helper
-import { getAuthUser, removeAuthData } from 'helpers/storage';
+import { getAuthStore, getAuthUser, removeAuthData } from 'helpers/storage';
 // config
 import { path } from 'config/path';
 
@@ -43,8 +43,9 @@ const ProfileSection = () => {
    * */
   const anchorRef = useRef(null);
   const handleLogout = async () => {
+    const url = `${path.urls.login}/${getAuthStore().id}`;
     removeAuthData();
-    navigate(path.urls.login);
+    navigate(url);
   };
 
   const handleClose = (event) => {

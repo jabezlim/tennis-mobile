@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 // material
 import {
+  Box,
   Button,
   Checkbox,
   FormControlLabel,
@@ -41,9 +42,9 @@ const INIT_VALUES = {
   password: '',
   terms: false,
 };
-const RegisterForm = ({storeName}) => {
+const RegisterForm = ({ setStoreId }) => {
   const navigate = useNavigate();
-  const { storeid } = useParams();
+  const { storeid, storename } = useParams();
   const phoneRef = useRef();
   const { message, settingMessage } = useGlobalContext();
   // data
@@ -141,6 +142,7 @@ const RegisterForm = ({storeName}) => {
     if (type === 'check_phone') phoneRef.current.focus();
   };
   const handleChangeStore = (storeId) => {
+    setStoreId(storeId);
     setFieldValue('store', storeId);
   };
 
@@ -150,91 +152,106 @@ const RegisterForm = ({storeName}) => {
   useEffect(() => {
     if (storeid) {
       setId(storeid);
-    } else setId('4');
+      handleChangeStore(storeid);
+    } else setId('0');
+    // eslint-disable-next-line
   }, [storeid]);
 
   return (
     <>
       <FormikProvider value={formik}>
         <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
-          <Stack spacing={2}>    
-            {        
-              storeName ? <Typography>지점명 : {storeName}</Typography> 
-              : <Store required storeId={id} handleStore={handleChangeStore} disabled={true} />
-            }
-            <TextField
-              fullWidth
-              color='tennis'
-              autoComplete='phone'
-              type='text'
-              inputRef={phoneRef}
-              label='핸드폰 번호 *'
-              {...getFieldProps('phone')}
-              error={Boolean(touched.phone && errors.phone)}
-              helperText={
-                touched.phone && errors.phone !== 'required' && errors.phone
-              }
-            />
-            <TextField
-              fullWidth
-              color='tennis'
-              autoComplete='password'
-              type={showPassword ? 'text' : 'password'}
-              label='비밀번호 *'
-              {...getFieldProps('password')}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton onClick={handleShowPassword} edge='end'>
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              error={Boolean(touched.password && errors.password)}
-              helperText={touched.password && errors.password}
-            />
-            <ConfirmCode
-              store={storeid}
-              phone={getFieldProps('phone').value}
-              setConfirmCode={setConfirmCode}
-              handleConfirm={handleConfirmCode}
-            />
-            <Stack>
-              <Stack direction='row'>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color='tennis'
-                      checked={getFieldProps('terms').value}
-                      onChange={handleCheckbox}
-                      sx={{ py: 0 }}
-                    />
+          <Stack spacing={2}>
+            {storename && <Typography>지점명 : {storename}</Typography>}
+            {!storename && (
+              <Store
+                required
+                storeId={id}
+                handleStore={handleChangeStore}
+                disabled={!!storeid}
+              />
+            )}
+            {!getFieldProps('store').value && (
+              <Box sx={{ width: 350, height: 235 }} />
+            )}
+            {getFieldProps('store').value && (
+              <>
+                <TextField
+                  fullWidth
+                  autoFocus
+                  color='tennis'
+                  autoComplete='phone'
+                  type='text'
+                  inputRef={phoneRef}
+                  label='핸드폰 번호 *'
+                  {...getFieldProps('phone')}
+                  error={Boolean(touched.phone && errors.phone)}
+                  helperText={
+                    touched.phone && errors.phone !== 'required' && errors.phone
                   }
-                  label='개인정보 동의'
                 />
-                <Button variant='text' onClick={() => setOpen(true)}>
-                  내용 보기
-                  <Icon icon={open24Filled} />
-                </Button>
-              </Stack>
-              <FormHelperText
-                error={Boolean(touched.terms && errors.terms)}
-                sx={{ height: 19, pl: 4, mt: -0.5 }}
-              >
-                {touched.terms && errors.terms}
-              </FormHelperText>
-            </Stack>
-            <LoadingButton
-              fullWidth
-              size='large'
-              type='submit'
-              color='tennis'
-              variant='contained'
-              loading={loading}
-            >
-              회원가입
-            </LoadingButton>
+                <TextField
+                  fullWidth
+                  color='tennis'
+                  autoComplete='password'
+                  type={showPassword ? 'text' : 'password'}
+                  label='비밀번호 *'
+                  {...getFieldProps('password')}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton onClick={handleShowPassword} edge='end'>
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  error={Boolean(touched.password && errors.password)}
+                  helperText={touched.password && errors.password}
+                />
+                <ConfirmCode
+                  store={storeid}
+                  phone={getFieldProps('phone').value}
+                  setConfirmCode={setConfirmCode}
+                  handleConfirm={handleConfirmCode}
+                />
+                <Stack>
+                  <Stack direction='row'>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          color='tennis'
+                          checked={getFieldProps('terms').value}
+                          onChange={handleCheckbox}
+                          sx={{ py: 0 }}
+                        />
+                      }
+                      label='개인정보 동의'
+                    />
+                    <Button variant='text' onClick={() => setOpen(true)}>
+                      내용 보기
+                      <Icon icon={open24Filled} />
+                    </Button>
+                  </Stack>
+                  <FormHelperText
+                    error={Boolean(touched.terms && errors.terms)}
+                    sx={{ height: 19, pl: 4, mt: -0.5 }}
+                  >
+                    {touched.terms && errors.terms}
+                  </FormHelperText>
+                </Stack>
+                <LoadingButton
+                  fullWidth
+                  size='large'
+                  type='submit'
+                  color='tennis'
+                  variant='contained'
+                  loading={loading}
+                >
+                  회원가입
+                </LoadingButton>
+              </>
+            )}
           </Stack>
         </Form>
       </FormikProvider>

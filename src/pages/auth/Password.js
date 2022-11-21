@@ -13,8 +13,7 @@ import AuthCardWrapper from './AuthCardWrapper';
 import AuthFooter from './AuthFooter';
 
 const Password = () => {
-  const { storeid } = useParams();
-  const { storename } = useParams();
+  const { storeid, storename } = useParams();
   // data
   const [id, setId] = useState();
   const [name, setName] = useState();
@@ -53,7 +52,7 @@ const Password = () => {
                     <Logo ball />
                   </Grid>
                   <Grid item xs={12}>
-                    <PasswordForm storeName={name} />
+                    <PasswordForm setStoreId={setId} setStoreName={setName} />
                   </Grid>
                   <Grid item xs={12}>
                     <Divider />

@@ -1,15 +1,9 @@
 import * as Yup from 'yup';
-import { useRef, useState } from 'react';
-import { startsWith } from 'lodash';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // material
 import { LoadingButton } from '@mui/lab';
-import {
-  FormHelperText,
-  IconButton,
-  InputAdornment,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 // form
 import { useFormik, Form, FormikProvider } from 'formik';
 // icon
@@ -23,10 +17,10 @@ import { MEMBER_UPDATE_QUERY } from 'graphql/mutation';
 import { useGlobalContext } from 'context';
 // component
 import { MainCard } from 'components/ui/cards';
-import { ConfirmCode } from 'components/app';
 // helper
 import { getAuthUser } from 'helpers/storage';
-import { storeDataVar } from 'helpers/cache';
+// config
+import { path } from 'config/path';
 // hooks
 import { useInterval } from 'hooks';
 // util
@@ -35,19 +29,17 @@ import { matchFormValues } from 'utils/util';
 const INIT_VALUES = {
   name: '',
   password: '',
+  password_confirm: '',
   code: '',
   email: '',
-  contact: '',
 };
 const Profile = () => {
-  const phoneRef = useRef();
-  const { settingMessage } = useGlobalContext();
+  const navigate = useNavigate();
+  const { message, settingMessage } = useGlobalContext();
   // data
-  const [phone, setPhone] = useState();
   const [formValues, setFormValues] = useState(INIT_VALUES);
   const [showPassword, setShowPassword] = useState(false);
   const [codeCount, setCodeCount] = useState(0);
-  const [confirmCode, setConfirmCode] = useState();
   const [isDone, setIsDone] = useState(false);
   // graphql
   useQuery(MEMBER_QUERY, {
@@ -59,59 +51,39 @@ const Profile = () => {
   });
   const [updateMember, { loading }] = useMutation(MEMBER_UPDATE_QUERY, {
     onCompleted: (data) => {
+      setIsDone(true);
       settingMessage('open', true);
       settingMessage('message', data.clt_updatemember.message);
-      if (data.clt_updatemember.status && confirmCode) {
-        setIsDone(true);
-        setPhone(getFieldProps('contact').value);
-      }
     },
     onError: (error) => console.log(error),
   });
 
   const ProfileSchema = Yup.object().shape({
-    // contact: Yup.number()
-    //   .typeError('핸드폰 번호는 숫자만 입력해 주세요')
-    //   .required('핸드폰 번호는 필수 사항입니다.'),
-    contact: Yup.string()
-      .matches(/^[0-9]+$/, '핸드폰 번호는 숫자만 입력해 주세요.')
-      .required('핸드폰 번호는 필수 사항입니다.'),
     password: Yup.string()
       .matches(/^[0-9]+$/, '숫자만 입력 가능합니다.')
       .min(6, '비밀번호는 6자리 이상입니다.'),
+    password_confirm: Yup.string()
+      .nullable()
+      .when('password', {
+        is: (val) => Boolean(val),
+        then: Yup.string()
+          .matches(/^[0-9]+$/, '숫자만 입력 가능합니다.')
+          .min(6, '비밀번호는 6자리 이상입니다.')
+          .oneOf([Yup.ref('password')], '비밀번호를 확인해주세요.')
+          .required('비밀번호 확인은 필수 항목입니다.'),
+      }),
   });
   const formik = useFormik({
     initialValues: formValues,
     validationSchema: ProfileSchema,
     enableReinitialize: true,
     onSubmit: (values) => {
-      if (
-        values.contact !== phone &&
-        (!confirmCode || confirmCode.length !== 6)
-      ) {
-        settingMessage('open', true);
-        settingMessage(
-          'message',
-          '새로운 핸드폰 번호 등록 시 인증코드가 필요합니다.'
-        );
-        return;
-      }
-
-      setIsDone(false);
       const variables = {
         memberId: getAuthUser().id,
-        phone: values.contact,
         name: values.name,
         email: values.email,
       };
       if (values.password) variables['password'] = values.password;
-      if (values.contact !== phone && confirmCode && confirmCode.length === 6) {
-        variables['prevPhone'] = phone;
-        variables['code'] = confirmCode;
-        if (startsWith(values.name, '010')) {
-          variables.name = values.contact;
-        }
-      }
       updateMember({ variables });
     },
   });
@@ -125,9 +97,15 @@ const Profile = () => {
     codeCount === 0 ? null : 1000
   );
 
+  useEffect(() => {
+    if (!message.open && isDone) {
+      navigate(path.urls.default);
+    }
+    // eslint-disable-next-line
+  }, [message.open, isDone]);
+
   const handleData = (data) => {
     const newValues = matchFormValues(INIT_VALUES, data);
-    setPhone(data.contact);
     setFormValues((prev) => {
       return {
         ...prev,
@@ -138,9 +116,6 @@ const Profile = () => {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
-  const handleConfirmCode = (type) => {
-    if (type === 'check_phone') phoneRef.current.focus();
-  };
 
   const { errors, touched, handleSubmit, getFieldProps } = formik;
 
@@ -149,49 +124,48 @@ const Profile = () => {
       <FormikProvider value={formik}>
         <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
           <Stack spacing={2}>
-            <Stack spacing={0}>
+            <Stack direction={'row'} spacing={1}>
               <TextField
                 fullWidth
                 color='tennis'
-                autoComplete='contact'
-                type='text'
-                inputRef={phoneRef}
-                label='핸드폰번호 *'
-                {...getFieldProps('contact')}
-                error={Boolean(touched.contact && errors.contact)}
-                helperText={touched.contact && errors.contact}
+                autoComplete='password'
+                type={showPassword ? 'text' : 'password'}
+                label='비밀번호'
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton onClick={handleShowPassword} edge='end'>
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                {...getFieldProps('password')}
+                error={Boolean(touched.password && errors.password)}
+                helperText={touched.password && errors.password}
               />
-              <FormHelperText error>
-                새로운 핸드폰 번호 등록 시 인증코드를 받으세요.
-              </FormHelperText>
+              <TextField
+                fullWidth
+                color='tennis'
+                autoComplete='password'
+                type={showPassword ? 'text' : 'password'}
+                label='비밀번호 확인'
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton onClick={handleShowPassword} edge='end'>
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                {...getFieldProps('password_confirm')}
+                error={Boolean(
+                  touched.password_confirm && errors.password_confirm
+                )}
+                helperText={touched.password_confirm && errors.password_confirm}
+              />
             </Stack>
-            <ConfirmCode
-              isDone={isDone}
-              store={storeDataVar().id}
-              phone={getFieldProps('contact').value}
-              prevPhone={phone}
-              setConfirmCode={setConfirmCode}
-              handleConfirm={handleConfirmCode}
-            />
-            <TextField
-              fullWidth
-              color='tennis'
-              autoComplete='password'
-              type={showPassword ? 'text' : 'password'}
-              label='비밀번호'
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton onClick={handleShowPassword} edge='end'>
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              {...getFieldProps('password')}
-              error={Boolean(touched.password && errors.password)}
-              helperText={touched.password && errors.password}
-            />
             <TextField
               fullWidth
               color='tennis'

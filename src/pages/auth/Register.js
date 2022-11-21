@@ -14,17 +14,14 @@ import AuthFooter from './AuthFooter';
 
 const Register = () => {
   const { storeid } = useParams();
-  const { storename } = useParams();
   // data
   const [id, setId] = useState();
-  const [name, setName] = useState();
 
   useEffect(() => {
     if (storeid) {
       setId(storeid);
-      setName(storename);
     }
-  }, [storeid, storename]);
+  }, [storeid]);
 
   return (
     <AuthWrapper>
@@ -53,7 +50,7 @@ const Register = () => {
                     <Logo ball />
                   </Grid>
                   <Grid item xs={12}>
-                    <RegisterForm storeName={name} />
+                    <RegisterForm setStoreId={setId} />
                   </Grid>
                   <Grid item xs={12}>
                     <Divider />
