@@ -15,6 +15,7 @@ export const path = {
     pwInquiry: '/pw-inquiry',
     home: '/home',
     memberBarcode: '/member/barcode',
+    memberVideos: '/member/videos',
     bookings: '/booking/bookings',
     bookingEdit: '/booking/booking-edit',
     tickets: '/ticket/tickets',

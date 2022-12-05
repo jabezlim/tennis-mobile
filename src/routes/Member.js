@@ -9,8 +9,9 @@ import { checkLoggedIn } from 'helpers/storage';
 import { path } from 'config/path';
 
 // member routing
-const UserProfile = Loadable(lazy(() => import('pages/member/Profile')));
+const MemberProfile = Loadable(lazy(() => import('pages/member/Profile')));
 const MemberBarcode = Loadable(lazy(() => import('pages/member/Barcode')));
+const MemberVideo = Loadable(lazy(() => import('pages/member/Video')));
 
 const PrivateRoute = ({ component: Component }) => {
   if (checkLoggedIn()) {
@@ -25,11 +26,15 @@ const Member = {
   children: [
     {
       path: path.urls.profile,
-      element: <PrivateRoute component={UserProfile} />,
+      element: <PrivateRoute component={MemberProfile} />,
     },
     {
       path: path.urls.memberBarcode,
       element: <PrivateRoute component={MemberBarcode} />,
+    },
+    {
+      path: path.urls.memberVideos,
+      element: <PrivateRoute component={MemberVideo} />,
     },
   ],
 };

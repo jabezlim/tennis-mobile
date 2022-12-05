@@ -20,23 +20,19 @@ const TABLE_HEAD = [
   { label: '구매' },
   { label: '결제일' },
 ];
+const TABLE_BODY = [
+  { id: 'category', alignLeft: true },
+  { id: 'program_name' },
+  { id: 'period_text' },
+  { id: 'price_text' },
+  { id: 'discount_text' },
+  { id: 'paytype_text' },
+  { id: 'payto_text' },
+  { id: 'created', fn: fDateIE },
+];
 const PaymentBrowser = ({ data, pagination, totalPage, handleChange }) => {
   // data
   const [payments, setPayments] = useState();
-  const [tableBodyKeys, setTableBodyKeys] = useState();
-
-  useEffect(() => {
-    setTableBodyKeys([
-      { id: 'category', alignLeft: true },
-      { id: 'program_name' },
-      { id: 'period_text' },
-      { id: 'price_text' },
-      { id: 'discount_text' },
-      { id: 'paytype_text' },
-      { id: 'payto_text' },
-      { id: 'created', fn: fDateIE },
-    ]);
-  }, []);
 
   useEffect(() => {
     if (data) {
@@ -67,7 +63,7 @@ const PaymentBrowser = ({ data, pagination, totalPage, handleChange }) => {
                   payto_text: PAY_TO[payment.payto] || '',
                 };
                 return (
-                  <TableBodyRow keys={tableBodyKeys} data={data} key={index} />
+                  <TableBodyRow keys={TABLE_BODY} data={data} key={index} />
                 );
               })}
           </TableBody>
