@@ -39,7 +39,7 @@ const VideoBrowser = ({
   }, [data]);
 
   const handleVideo = (video) => {
-    handleClick(video.video_url, video.video_name);
+    if (handleClick) handleClick(video);
   };
 
   return (

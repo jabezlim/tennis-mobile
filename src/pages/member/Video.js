@@ -88,9 +88,18 @@ const Video = () => {
       setCurrentPage(currentPage + 1);
     }
   };
-  const handleClickVideo = (url, name) => {
-    const video = endsWith(url, '/') ? url + name : url + '/' + name;
-    setVideo(video);
+  const handleClickVideo = (video) => {
+    let video_url = '';
+    if (video.video_url) {
+      video_url = endsWith(video.video_url, '/')
+        ? video.video_url + video.video_name
+        : video.video_url + '/' + video.video_name;
+    } else {
+      const addr = video.video_addr === '::1' ? 'localhost' : video.video_addr;
+      const port = video.video_port ? ':' + video.video_port : '';
+      video_url = addr + port + '/' + video.video_name;
+    }
+    setVideo(video_url);
     setOpen(true);
   };
 

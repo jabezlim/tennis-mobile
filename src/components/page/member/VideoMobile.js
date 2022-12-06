@@ -31,9 +31,7 @@ const VideoMobile = ({ data, currentPage, handleScroll, handleClick }) => {
                   <Stack direction={'row'} justifyContent='space-between'>
                     <Typography
                       variant='h4'
-                      onClick={() =>
-                        handleClick(video.video_url, video.video_name)
-                      }
+                      onClick={() => handleClick(video)}
                       sx={{ textDecoration: 'underline' }}
                     >
                       {video.video_name}

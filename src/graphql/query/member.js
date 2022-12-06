@@ -38,6 +38,8 @@ export const MEMBER_VIDEOS_QUERY = gql`
     ) {
       items {
         id
+        video_addr
+        video_port
         video_url
         video_name
         info
