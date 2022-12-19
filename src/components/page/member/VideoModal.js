@@ -10,19 +10,17 @@ const VideoModal = ({ open, setOpen, video }) => {
     if (video) {
       const timer = setTimeout(() => {
         const player = document.getElementById('player');
-        if (player.canPlayType('application/vnd.apple.mpegurl')) {
-          // First check for native browser HLS support
-          player.src = video;
-          player.addEventListener('loadedmetadata', function () {
-            player.muted = true;
-            player.play();
-          });
-        } else if (Hls.isSupported()) {
-          // If no native HLS support, check if HLS.js is supported
+        if (Hls.isSupported()) {
           var hls = new Hls();
           hls.loadSource(video);
           hls.attachMedia(player);
           hls.on(Hls.Events.MANIFEST_PARSED, function () {
+            player.muted = true;
+            player.play();
+          });
+        } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+          player.src = video;
+          player.addEventListener('loadedmetadata', function () {
             // player.muted = true;
             // player.play();
           });
