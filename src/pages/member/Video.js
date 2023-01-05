@@ -5,7 +5,7 @@ import {
   isBrowser,
   isMobile,
 } from 'react-device-detect';
-import { concat, endsWith } from 'lodash';
+import { concat, endsWith, startsWith } from 'lodash';
 // graphql
 import { useLazyQuery } from '@apollo/client';
 import { MEMBER_VIDEOS_QUERY } from 'graphql/query';
@@ -98,6 +98,12 @@ const Video = () => {
       const addr = video.video_addr === '::1' ? 'localhost' : video.video_addr;
       const port = video.video_port ? ':' + video.video_port : '';
       video_url = addr + port + '/' + video.video_name;
+    }
+    if (
+      !startsWith(video_url, 'http://') &&
+      !startsWith(video_url, 'https://')
+    ) {
+      video_url = '//' + video_url;
     }
     setVideo(video_url);
     setOpen(true);
