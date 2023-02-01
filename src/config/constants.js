@@ -1,4 +1,7 @@
 import { path } from './path';
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import SportsTennisIcon from '@mui/icons-material/SportsTennis';
 
 // theme constant
 export const drawerWidth = 260;
@@ -25,9 +28,9 @@ export const TIME_FORMAT_AM_PM = 'hh:mm a';
 // data constant
 export const HOME_LIST = [
   // { label: '바코드보기', path: path.urls.memberBarcode },
-  { label: '시설이용권', path: path.urls.ticketMachine },
-  { label: '예약하기', path: path.urls.bookingEdit },
-  { label: '레슨수강', path: path.urls.ticketLesson },
+  { label: '예약하기', path: path.urls.bookingEdit, icon:<AccessAlarmIcon sx={{":first-of-type" : {fontSize : '40px'}}} />},
+  { label: '시설이용권', path: path.urls.ticketMachine, icon:<ConfirmationNumberIcon sx={{":first-of-type" : {fontSize : '40px'}}} /> },
+  { label: '레슨수강', path: path.urls.ticketLesson, icon:<SportsTennisIcon sx={{":first-of-type" : {fontSize : '40px'}}} /> },
 ];
 
 export const CALENDAR_HEAD = ['일', '월', '화', '수', '목', '금', '토'];

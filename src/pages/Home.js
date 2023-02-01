@@ -13,30 +13,31 @@ import { MainCard } from 'components/ui/cards';
 import { getAuthBarcode, getAuthUser, removeAuthData } from 'helpers/storage';
 // config
 import { path } from 'config/path';
-import { BOOKING_TYPE, HOME_LIST } from 'config/constants';
+import { HOME_LIST } from 'config/constants';
 
 const Booking = ({ booking }) => {
   return (
-    <Stack spacing={1} sx={{ width: '100%' }}>
-      <Typography variant='h4'>{booking.store_name}</Typography>
-      <Typography variant='h5'>
-        {BOOKING_TYPE[booking.type]} - {booking.machine_program_name}
+    <Stack spacing={1} sx={{ width: '100%' }} direction="row" justifyContent="space-between">
+      <Typography variant='h3'>
+        {booking.machine_program_name}
       </Typography>
-      <Typography>
-        시작: {booking.start_date} {booking.start_time}
-      </Typography>
-      <Typography>
-        완료: {booking.end_date} {booking.end_time}
+      <Typography variant='h4'>
+        {booking.start_date} {booking.start_time} ~ {booking.end_time}
       </Typography>
     </Stack>
   );
 };
 
 const StyledButton = styled(Button)({
-  fontSize: 24,
+  fontSize: 25,
+  paddingLeft: 40,
   paddingTop: 15,
   paddingBottom: 15,
+  // "*:nth-of-type(1)": {
+  //   fontSize: 41
+  // }
 });
+
 const Home = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -73,18 +74,7 @@ const Home = () => {
   return (
     <MainCard>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-        {bookings && (
-          <Typography variant='h3' sx={{ width: 100 }}>
-            예약
-          </Typography>
-        )}
-        {bookings &&
-          bookings.map((booking, index) => (
-            <Booking booking={booking} key={index} />
-          ))}
-      </Stack>
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} sx={{ mt: 2 }}>
-        <Box
+      <Box
           sx={{
             width: 220,
             textAlign: 'center',
@@ -113,10 +103,27 @@ const Home = () => {
             {getAuthBarcode()}
           </Typography>
         </Box>
+      </Stack>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ px: 2, mt:2}}>
+        {bookings && bookings.length>0 && (
+          <>
+            <Typography variant='h5' sx={{ width: 100 }}>
+              예약 {bookings.length} 건
+            </Typography>
+            <Booking booking={bookings[0]} key={0} />
+          </>
+        )}
+        {/* {bookings &&
+          bookings.map((booking, index) => (
+            <Booking booking={booking} key={index} />
+          ))} */}
+      </Stack>
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} sx={{ mt: 2 }}>        
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
+          justifyContent="center"
+          alignItems="center"
           spacing={2}
-          sx={{ py: { xs: 0, md: 2 } }}
         >
           {HOME_LIST &&
             HOME_LIST.map((list, index) => {
@@ -128,12 +135,15 @@ const Home = () => {
                     sx={{
                       borderRadius: 9,
                       color: 'common.black',
-                      width: { xs: '100%', md: 180 },
+                      width: { xs: '70%', md: 180 },                      
                     }}
                     onClick={() => handleClick(list.path)}
                     key={index}
+                    startIcon={list.icon}
+                    fullWidth={true}
+                    style={{justifyContent: "flex-start"}}
                   >
-                    {list.label}
+                    &nbsp;{list.label}
                   </StyledButton>
                 );
               } else {
