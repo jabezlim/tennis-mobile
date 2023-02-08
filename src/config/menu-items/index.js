@@ -4,7 +4,7 @@ import ticket from './ticket';
 import member from './member';
 
 const menuItems = {
-  items: [member, booking, ticket],
+  items: [booking, ticket, member],
 };
 
 export default menuItems;

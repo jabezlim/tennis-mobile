@@ -12,7 +12,7 @@ import { storeDataVar } from 'helpers/cache';
 
 const baseurl =
   process.env.NODE_ENV === 'development'
-    ? 'http://amz5.local.tst/tennis/ci/index.php/graphql'
+    ? 'http://tennissquad.local.tst/tennis/ci/index.php/graphql'
     : '/tennis/ci/index.php/graphql';
 
 const httpLink = createHttpLink({
