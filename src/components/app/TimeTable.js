@@ -5,7 +5,6 @@ import { differenceInMinutes, format, parseISO } from 'date-fns';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { DATE_FORMAT } from 'config/constants';
 
-const Minutes = ['00', '15', '30', '45'];
 const TimeTableButtonText = ({
   start,
   end,
@@ -43,6 +42,7 @@ const TimeTableButtonText = ({
 };
 const TimeTableButton = ({
   hour,
+  minutes,
   discount,
   booked,
   lessons,
@@ -52,14 +52,15 @@ const TimeTableButton = ({
 }) => {
   const today = new Date();
   const nowDate = isToday ? format(today, DATE_FORMAT) : '';
+  const temp = minutes.length === 3 ? 2 : 3;
   return (
     <Stack direction='row' spacing={{ xs: 0.5, sm: 1 }}>
-      {Minutes.map((minute, index) => {
+      {minutes.map((minute, index) => {
         const time = `${hour}:${minute}:00`;
         const start = `${hour}:${minute}`;
         const end = `~ ${
-          index < 3 ? hour : padStart(Number(hour) + 1, 2, '0')
-        }:${index < 3 ? Minutes[index + 1] : Minutes[0]}`;
+          index < temp ? hour : padStart(Number(hour) + 1, 2, '0')
+        }:${index < temp ? minutes[index + 1] : minutes[0]}`;
 
         const disabled = isToday
           ? differenceInMinutes(
@@ -122,11 +123,13 @@ const TimeTable = ({
   booked,
   lessons,
   bookingTimes,
+  period = 15,
   isToday,
   handleClick,
 }) => {
   // data
   const [timeList, setTimeList] = useState();
+  const [minutes, setMinutes] = useState([]);
 
   useEffect(() => {
     const hours = [];
@@ -134,6 +137,12 @@ const TimeTable = ({
       hours.push(padStart(i, 2, '0'));
     }
     setTimeList(chunk(hours, 12));
+
+    const temp = [];
+    for (let i = 0; i < 60 / period; i++) {
+      temp.push(padStart(i * period, 2, '0'));
+    }
+    setMinutes(temp);
   }, []);
 
   return (
@@ -152,6 +161,7 @@ const TimeTable = ({
               <TimeTableButton
                 key={index}
                 hour={hour}
+                minutes={minutes}
                 discount={discount}
                 booked={booked}
                 lessons={lessons}
@@ -176,6 +186,7 @@ const TimeTable = ({
               <TimeTableButton
                 key={index}
                 hour={hour}
+                minutes={minutes}
                 discount={discount}
                 booked={booked}
                 lessons={lessons}

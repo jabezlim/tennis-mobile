@@ -17,12 +17,16 @@ import { HOME_LIST } from 'config/constants';
 
 const Booking = ({ booking }) => {
   return (
-    <Stack spacing={1} sx={{ width: '100%' }} direction="row" justifyContent="space-between">
-      <Typography variant='h3'>
-        {booking.machine_program_name}
-      </Typography>
+    <Stack
+      spacing={1}
+      sx={{ width: '100%' }}
+      direction='row'
+      justifyContent='space-between'
+    >
+      <Typography variant='h3'>{booking.machine_program_name}</Typography>
       <Typography variant='h4'>
-        {booking.start_date} {booking.start_time} ~ {booking.end_time}
+        {booking.start_date} {booking.start_time.substring(0, 5)} ~{' '}
+        {booking.end_time.substring(0, 5)}
       </Typography>
     </Stack>
   );
@@ -74,7 +78,7 @@ const Home = () => {
   return (
     <MainCard>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-      <Box
+        <Box
           sx={{
             width: 220,
             textAlign: 'center',
@@ -104,8 +108,12 @@ const Home = () => {
           </Typography>
         </Box>
       </Stack>
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ px: 2, mt:2}}>
-        {bookings && bookings.length>0 && (
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={1}
+        sx={{ px: 2, mt: 2 }}
+      >
+        {bookings && bookings.length > 0 && (
           <>
             <Typography variant='h5' sx={{ width: 100 }}>
               예약 {bookings.length} 건
@@ -118,11 +126,11 @@ const Home = () => {
             <Booking booking={booking} key={index} />
           ))} */}
       </Stack>
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} sx={{ mt: 2 }}>        
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} sx={{ mt: 2 }}>
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
-          justifyContent="center"
-          alignItems="center"
+          justifyContent='center'
+          alignItems='center'
           spacing={2}
         >
           {HOME_LIST &&
@@ -135,13 +143,13 @@ const Home = () => {
                     sx={{
                       borderRadius: 9,
                       color: 'common.black',
-                      width: { xs: '70%', md: 180 },                      
+                      width: { xs: '75%', md: 250 },
                     }}
                     onClick={() => handleClick(list.path)}
                     key={index}
                     startIcon={list.icon}
                     fullWidth={true}
-                    style={{justifyContent: "flex-start"}}
+                    style={{ justifyContent: 'flex-start' }}
                   >
                     &nbsp;{list.label}
                   </StyledButton>

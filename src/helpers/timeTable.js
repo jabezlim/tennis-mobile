@@ -5,7 +5,7 @@ import { TIME_FORMAT } from 'config/constants';
 
 const BOOK_COLORS = ['primary', 'error', 'orange', 'warning', 'success'];
 
-export const createBookedData = (booked) => {
+export const createBookedData = (booked, period) => {
   if (booked.length > 0) {
     const bookings = {};
     forEach(booked, (booking, index) => {
@@ -15,9 +15,9 @@ export const createBookedData = (booked) => {
         booking.start_date + ' ' + booking.start_time
       );
       const endDateTime = parseISO(booking.end_date + ' ' + booking.end_time);
-      const rows = differenceInMinutes(endDateTime, startDateTime) / 15;
+      const rows = differenceInMinutes(endDateTime, startDateTime) / period;
       for (let i = 0; i < rows; i++) {
-        const time = format(addMinutes(startDateTime, i * 15), TIME_FORMAT);
+        const time = format(addMinutes(startDateTime, i * period), TIME_FORMAT);
         bookings[booking.machine_id][time] = color;
       }
     });
@@ -47,14 +47,14 @@ export const createLessonBookedData = (lessons) => {
   return {};
 };
 
-export const createContinuousTime = (times) => {
+export const createContinuousTime = (times, period) => {
   const sortedTimes = sortBy(times, (t) => t);
   const selectedTimes = [];
   const startTime = parseISO(sortedTimes[0]);
   const endTime = parseISO(sortedTimes[1]);
-  const period = differenceInMinutes(endTime, startTime) / 15;
-  for (let i = 0; i <= period; i++) {
-    selectedTimes.push(format(addMinutes(startTime, i * 15), TIME_FORMAT));
+  const periodTime = differenceInMinutes(endTime, startTime) / period;
+  for (let i = 0; i <= periodTime; i++) {
+    selectedTimes.push(format(addMinutes(startTime, i * period), TIME_FORMAT));
   }
   return selectedTimes;
 };

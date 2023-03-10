@@ -78,21 +78,24 @@ const BookingForm = ({
 
   useEffect(() => {
     if (booked) {
-      setBookedTimes(createBookedData(booked));
+      setBookedTimes(createBookedData(booked, storeData.booking_time_period));
     }
   }, [booked]);
 
   useEffect(() => {
     if (selectedTimes) {
       if (selectedTimes.length === 2) {
-        const times = createContinuousTime(selectedTimes);
+        const times = createContinuousTime(
+          selectedTimes,
+          storeData.booking_time_period
+        );
         setBookingTimes(times);
       }
     }
   }, [selectedTimes]);
 
   useEffect(() => {
-    const selectedTime = bookingTimes.length * 15;
+    const selectedTime = bookingTimes.length * storeData.booking_time_period;
     setTotalTime(selectedTime);
     if (selectedTime > memberTime) {
       setBtnDisable(true);
@@ -138,8 +141,9 @@ const BookingForm = ({
       if (discountTime) {
         forEach(bookingTimes, (time) => {
           if (discountTime[time] > 0) {
-            discountValue += 15 * (discountTime[time] / 100);
-            // discountValue += Math.round(15 * (discountTime[time] / 100));
+            discountValue +=
+              storeData.booking_time_period * (discountTime[time] / 100);
+            // discountValue += Math.round(storeData.booking_time_period * (discountTime[time] / 100));
           }
         });
         discountValue = Math.round(discountValue);
@@ -155,7 +159,7 @@ const BookingForm = ({
             bookingTimes[bookingTimes.length - 1]
           }`
         ),
-        15
+        storeData.booking_time_period
       );
       const endTime = format(endDateTime, TIME_FORMAT);
       const usedTime =
@@ -219,6 +223,7 @@ const BookingForm = ({
           booked={bookedTimes[machineId]}
           lessons={lessonTimes[dayOfWeek]}
           bookingTimes={bookingTimes}
+          period={storeData.booking_time_period}
           isToday={isToday}
           handleClick={handleClickTime}
         />
