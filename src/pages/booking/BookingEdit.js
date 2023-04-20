@@ -7,6 +7,7 @@ import { Stack, Typography } from '@mui/material';
 import { useLazyQuery, useQuery, useReactiveVar } from '@apollo/client';
 import {
   DISCOUNT_SCHEDULE_QUERY,
+  MACHINE_BLOCKED_QUERY,
   MACHINE_BOOKED_QUERY,
   MACHINE_LESSON_QUERY,
   MEMBER_TIMES_QUERY,
@@ -17,7 +18,10 @@ import { useGlobalContext } from 'context';
 import { MainCard } from 'components/ui/cards';
 import { BookingForm } from 'components/page/booking';
 // helper
-import { createLessonBookedData } from 'helpers/timeTable';
+import {
+  createLessonBookedData,
+  createMachineBlockedData,
+} from 'helpers/timeTable';
 import { storeDataVar } from 'helpers/cache';
 // config
 import { DATE_FORMAT } from 'config/constants';
@@ -28,6 +32,7 @@ const BookingEdit = () => {
   // data
   const [memberTime, setMemberTime] = useState(0);
   const [lessons, setLessons] = useState();
+  const [blocked, setBlocked] = useState();
   const [discount, setDiscount] = useState();
   const [booked, setBooked] = useState();
   const [isToday, setIsToday] = useState(true);
@@ -51,6 +56,15 @@ const BookingEdit = () => {
       if (data.clt_machinelesson && data.clt_machinelesson.length > 0) {
         const lessons = createLessonBookedData(data.clt_machinelesson);
         setLessons(lessons);
+      }
+    },
+  });
+  useQuery(MACHINE_BLOCKED_QUERY, {
+    variables: { storeId: storeData.id },
+    onCompleted: (data) => {
+      if (data.clt_machineblocked && data.clt_machineblocked.length > 0) {
+        const blocked = createMachineBlockedData(data.clt_machineblocked);
+        setBlocked(blocked);
       }
     },
   });
@@ -130,6 +144,7 @@ const BookingEdit = () => {
             discount={discount}
             booked={booked}
             lessons={lessons}
+            blocked={blocked}
             isToday={isToday}
             handleDate={handleChangeDate}
             handleMessage={handleMessage}

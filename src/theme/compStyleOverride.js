@@ -19,6 +19,9 @@ export const componentStyleOverrides = (theme) => {
             borderColor: theme.colors.tennisDark,
           },
         },
+        containedDark: {
+          color: theme.colors.black,
+        },
       },
     },
     MuiPaper: {

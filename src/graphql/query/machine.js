@@ -21,6 +21,16 @@ export const MACHINE_LESSON_QUERY = gql`
   }
 `;
 
+export const MACHINE_BLOCKED_QUERY = gql`
+  query GetMachineLesson($storeId: ID!) {
+    clt_machineblocked(store_id: $storeId) {
+      machine_id
+      day
+      time
+    }
+  }
+`;
+
 export const MACHINE_BOOKED_QUERY = gql`
   query GetMachineBooked($storeId: ID!, $date: String!) {
     clt_machinebooked(store_id: $storeId, date: $date) {

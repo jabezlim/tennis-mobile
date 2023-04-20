@@ -34,6 +34,7 @@ const BookingForm = ({
   discount,
   booked,
   lessons,
+  blocked,
   isToday,
   handleDate,
   handleMessage,
@@ -45,6 +46,7 @@ const BookingForm = ({
   const [bookedTimes, setBookedTimes] = useState({});
   const [lessonTimes, setLessonTimes] = useState({});
   const [bookingTimes, setBookingTimes] = useState([]);
+  const [blockedTimes, setBlockedTimes] = useState([]);
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [totalTime, setTotalTime] = useState(0);
   const [discountTime, setDiscountTime] = useState();
@@ -80,6 +82,7 @@ const BookingForm = ({
     if (booked) {
       setBookedTimes(createBookedData(booked, storeData.booking_time_period));
     }
+    // eslint-disable-next-line
   }, [booked]);
 
   useEffect(() => {
@@ -92,6 +95,7 @@ const BookingForm = ({
         setBookingTimes(times);
       }
     }
+    // eslint-disable-next-line
   }, [selectedTimes]);
 
   useEffect(() => {
@@ -112,6 +116,9 @@ const BookingForm = ({
     if (lessons && lessons[id]) {
       setLessonTimes(lessons[id]);
     } else setLessonTimes({});
+    if (blocked && blocked[id]) {
+      setBlockedTimes(blocked[id]);
+    } else setBlockedTimes({});
   };
   const handleClickTime = (time) => {
     const datetime = format(bookDate, DATE_FORMAT) + ' ' + time;
@@ -133,6 +140,14 @@ const BookingForm = ({
       if (includes(bookingTimes, time)) {
         checkDuplicate = false;
         break;
+      }
+    }
+    if (checkDuplicate) {
+      for (const time of blockedTimes[dayOfWeek]) {
+        if (includes(bookingTimes, time)) {
+          checkDuplicate = false;
+          break;
+        }
       }
     }
 
@@ -222,6 +237,7 @@ const BookingForm = ({
           discount={discountTime}
           booked={bookedTimes[machineId]}
           lessons={lessonTimes[dayOfWeek]}
+          blocked={blockedTimes[dayOfWeek]}
           bookingTimes={bookingTimes}
           period={storeData.booking_time_period}
           isToday={isToday}

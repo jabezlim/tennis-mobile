@@ -47,6 +47,21 @@ export const createLessonBookedData = (lessons) => {
   return {};
 };
 
+export const createMachineBlockedData = (blocked) => {
+  if (blocked.length > 0) {
+    const temp = {};
+    forEach(blocked, (block) => {
+      if (!temp[block.machine_id]) temp[block.machine_id] = {};
+      if (!temp[block.machine_id][block.day])
+        temp[block.machine_id][block.day] = [];
+
+      temp[block.machine_id][block.day].push(block.time);
+    });
+    return temp;
+  }
+  return {};
+};
+
 export const createContinuousTime = (times, period) => {
   const sortedTimes = sortBy(times, (t) => t);
   const selectedTimes = [];

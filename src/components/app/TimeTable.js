@@ -46,6 +46,7 @@ const TimeTableButton = ({
   discount,
   booked,
   lessons,
+  blocked,
   bookingTimes,
   isToday,
   handleClick,
@@ -69,14 +70,35 @@ const TimeTableButton = ({
             ) < 1
           : false;
 
-        const bookedColor = booked && booked[time];
-        const lessonColor = lessons && lessons[time];
-        if (bookedColor || lessonColor) {
+        // blocked
+        if (includes(blocked, time)) {
           return (
             <Button
               fullWidth
               variant='contained'
-              color={bookedColor || lessonColor}
+              disabled={disabled}
+              color='dark'
+              sx={{ height: 70, p: 0 }}
+              key={index}
+            >
+              <TimeTableButtonText
+                start={start}
+                end={end}
+                text='예약 불가'
+                color='white'
+                disabled={disabled}
+              />
+            </Button>
+          );
+        }
+
+        const bookedColor = booked && booked[time];
+        if (bookedColor) {
+          return (
+            <Button
+              fullWidth
+              variant='contained'
+              color={bookedColor}
               disabled={disabled}
               sx={{ height: 70, p: 0 }}
               key={index}
@@ -85,8 +107,6 @@ const TimeTableButton = ({
                 start={start}
                 end={end}
                 color='white'
-                text={lessonColor && '레슨'}
-                textColor={lessonColor && 'white'}
                 disabled={disabled}
               />
             </Button>
@@ -95,6 +115,7 @@ const TimeTableButton = ({
 
         const selected = includes(bookingTimes, time);
         const discountValue = discount && discount[time];
+        const lessonColor = lessons && lessons[time];
         return (
           <Button
             fullWidth
@@ -109,7 +130,10 @@ const TimeTableButton = ({
               start={start}
               end={end}
               color={selected ? 'black' : 'black'}
-              text={discountValue && `${discountValue}% 할인`}
+              text={
+                (discountValue && `${discountValue}% 할인`) ||
+                (lessonColor && '레슨')
+              }
               disabled={disabled}
             />
           </Button>
@@ -122,6 +146,7 @@ const TimeTable = ({
   discount,
   booked,
   lessons,
+  blocked,
   bookingTimes,
   period = 15,
   isToday,
@@ -143,6 +168,7 @@ const TimeTable = ({
       temp.push(padStart(i * period, 2, '0'));
     }
     setMinutes(temp);
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -165,6 +191,7 @@ const TimeTable = ({
                 discount={discount}
                 booked={booked}
                 lessons={lessons}
+                blocked={blocked}
                 bookingTimes={bookingTimes}
                 isToday={isToday}
                 handleClick={handleClick}
@@ -190,6 +217,7 @@ const TimeTable = ({
                 discount={discount}
                 booked={booked}
                 lessons={lessons}
+                blocked={blocked}
                 bookingTimes={bookingTimes}
                 isToday={isToday}
                 handleClick={handleClick}
