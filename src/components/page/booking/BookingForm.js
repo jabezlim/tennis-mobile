@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { concat, forEach, includes } from 'lodash';
+import { concat, forEach, includes, isEmpty } from 'lodash';
 import {
   addMinutes,
   differenceInDays,
@@ -143,10 +143,12 @@ const BookingForm = ({
       }
     }
     if (checkDuplicate) {
-      for (const time of blockedTimes[dayOfWeek]) {
-        if (includes(bookingTimes, time)) {
-          checkDuplicate = false;
-          break;
+      if (!isEmpty(blockedTimes) && !isEmpty(blockedTimes[dayOfWeek])) {
+        for (const time of blockedTimes[dayOfWeek]) {
+          if (includes(bookingTimes, time)) {
+            checkDuplicate = false;
+            break;
+          }
         }
       }
     }
