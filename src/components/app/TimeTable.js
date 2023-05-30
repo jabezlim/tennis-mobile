@@ -1,232 +1,254 @@
 import { useEffect, useState } from 'react';
-import { chunk, includes, padStart } from 'lodash';
-import { differenceInMinutes, format, parseISO } from 'date-fns';
+import { addDays, format, parseISO } from 'date-fns';
+import { split } from 'lodash';
 // material
-import { Box, Button, Stack, Typography } from '@mui/material';
-import { DATE_FORMAT } from 'config/constants';
+import { Stack, Typography } from '@mui/material';
+// config
+import {
+  CALENDAR_HEAD,
+  DATETIME_FORMAT,
+  DATE_FORMAT,
+  DAY_OF_WEEK,
+  NEXT_DATE_TIME_PERIOD,
+} from 'config/constants';
+import { text11, text12, text14, text14B } from 'config/styles';
 
-const TimeTableButtonText = ({
-  start,
-  end,
-  color,
-  text,
-  textColor = 'error',
-  disabled,
-}) => {
-  return (
-    <Box>
-      <Typography
-        variant='subtitle1'
-        color={disabled ? 'grey.500' : color}
-        sx={{ lineHeight: 1.3 }}
-      >
-        {start}
-      </Typography>
-      <Typography
-        variant='subtitle1'
-        color={disabled ? 'grey.500' : color}
-        sx={{ lineHeight: 1.3 }}
-      >
-        {end}
-      </Typography>
-      {text && (
-        <Typography
-          variant='subtitle2'
-          color={disabled ? 'grey.500' : textColor}
-        >
-          {text}
-        </Typography>
-      )}
-    </Box>
-  );
-};
-const TimeTableButton = ({
-  hour,
-  minutes,
-  discount,
-  booked,
-  lessons,
-  blocked,
-  bookingTimes,
-  isToday,
-  handleClick,
-}) => {
-  const today = new Date();
-  const nowDate = isToday ? format(today, DATE_FORMAT) : '';
-  const temp = minutes.length === 3 ? 2 : 3;
-  return (
-    <Stack direction='row' spacing={{ xs: 0.5, sm: 1 }}>
-      {minutes.map((minute, index) => {
-        const time = `${hour}:${minute}:00`;
-        const start = `${hour}:${minute}`;
-        const end = `~ ${
-          index < temp ? hour : padStart(Number(hour) + 1, 2, '0')
-        }:${index < temp ? minutes[index + 1] : minutes[0]}`;
-
-        const disabled = isToday
-          ? differenceInMinutes(
-              parseISO(`${nowDate} ${hour}:${minute}:00`),
-              today
-            ) < 1
-          : false;
-
-        // blocked
-        if (includes(blocked, time)) {
-          return (
-            <Button
-              fullWidth
-              variant='contained'
-              disabled={disabled}
-              color='dark'
-              sx={{ height: 70, p: 0 }}
-              key={index}
-            >
-              <TimeTableButtonText
-                start={start}
-                end={end}
-                text='예약 불가'
-                color='white'
-                disabled={disabled}
-              />
-            </Button>
-          );
-        }
-
-        const bookedColor = booked && booked[time];
-        if (bookedColor) {
-          return (
-            <Button
-              fullWidth
-              variant='contained'
-              color={bookedColor}
-              disabled={disabled}
-              sx={{ height: 70, p: 0 }}
-              key={index}
-            >
-              <TimeTableButtonText
-                start={start}
-                end={end}
-                color='white'
-                disabled={disabled}
-              />
-            </Button>
-          );
-        }
-
-        const selected = includes(bookingTimes, time);
-        const discountValue = discount && discount[time];
-        const lessonColor = lessons && lessons[time];
-        return (
-          <Button
-            fullWidth
-            variant={selected ? 'contained' : 'outlined'}
-            color='tennis'
-            disabled={disabled}
-            sx={{ height: 70, p: 0 }}
-            onClick={() => handleClick(time)}
-            key={index}
-          >
-            <TimeTableButtonText
-              start={start}
-              end={end}
-              color={selected ? 'black' : 'black'}
-              text={
-                (discountValue && `${discountValue}% 할인`) ||
-                (lessonColor && '레슨')
-              }
-              disabled={disabled}
-            />
-          </Button>
-        );
-      })}
-    </Stack>
-  );
-};
 const TimeTable = ({
-  discount,
-  booked,
-  lessons,
-  blocked,
-  bookingTimes,
+  date,
   period = 15,
-  isToday,
-  handleClick,
+  blocked = {},
+  discounts = {},
+  booked = [],
+  bookings = [],
+  handleTime,
 }) => {
   // data
-  const [timeList, setTimeList] = useState();
+  const [nextDate, setNextDate] = useState();
+  const [today, setToday] = useState();
   const [minutes, setMinutes] = useState([]);
+  const [times, setTimes] = useState();
+  const [isShowAM, setIsShowAM] = useState(true);
 
   useEffect(() => {
-    const hours = [];
-    for (let i = 0; i < 24; i++) {
-      hours.push(padStart(i, 2, '0'));
-    }
-    setTimeList(chunk(hours, 12));
+    if (!today) {
+      const dateHour = format(new Date(), DATETIME_FORMAT);
+      const temp = split(dateHour, ' ');
+      const tempTime = split(temp[1], ':');
+      setToday({ date: temp[0], hour: tempTime[0], minute: tempTime[1] });
 
-    const temp = [];
-    for (let i = 0; i < 60 / period; i++) {
-      temp.push(padStart(i * period, 2, '0'));
+      const tempMinutes = [];
+      for (let i = 0; i < 60 / period; i++) {
+        // tempMinutes.push(padStart(i * period, 2, '0'));
+        tempMinutes.push(String(i * period).padStart(2, '0'));
+      }
+      setMinutes(tempMinutes);
     }
-    setMinutes(temp);
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    if (date) {
+      setNextDate({
+        date: format(addDays(parseISO(date.date), 1), DATE_FORMAT),
+        day: (date.day + 1) % 7,
+      });
+      if (date.date === today.date && Number(today.hour) > 11) {
+        setIsShowAM(false);
+      } else {
+        setIsShowAM(true);
+      }
+    }
+    // eslint-disable-next-line
+  }, [date]);
+
+  useEffect(() => {
+    if (nextDate) {
+      const temp = { am: [], pm: [], next: [] };
+      for (let i = 0; i < 12; i++) {
+        // temp.am.push({ date: date.date, hour: padStart(i, 2, '0') });
+        temp.am.push({
+          date: date.date,
+          hour: String(i).padStart(2, '0'),
+          day: DAY_OF_WEEK[date.day],
+        });
+      }
+      for (let i = 12; i < 24; i++) {
+        // temp.pm.push({ date: date.date, hour: padStart(i, 2, '0') });
+        temp.pm.push({
+          date: date.date,
+          hour: String(i).padStart(2, '0'),
+          day: DAY_OF_WEEK[date.day],
+        });
+      }
+      if (NEXT_DATE_TIME_PERIOD > 0) {
+        for (let i = 0; i < NEXT_DATE_TIME_PERIOD; i++) {
+          // temp.next.push({ date: nextDate.date, hour: padStart(i, 2, '0') });
+          temp.next.push({
+            date: nextDate.date,
+            hour: String(i).padStart(2, '0'),
+            day: DAY_OF_WEEK[nextDate.day],
+          });
+        }
+      }
+      setTimes(temp);
+    }
+    // eslint-disable-next-line
+  }, [nextDate]);
+
   return (
-    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} maxWidth={750}>
-      <Stack sx={{ width: '100%' }} spacing={{ xs: 0.5, sm: 1 }}>
-        <Typography
-          variant='h5'
-          align='center'
-          sx={{ fontWeight: 700, border: 1, py: 0.5 }}
-        >
-          오전 (AM)
-        </Typography>
-        {timeList &&
-          timeList[0].map((hour, index) => {
-            return (
-              <TimeTableButton
-                key={index}
-                hour={hour}
+    <Stack spacing={2}>
+      {isShowAM && (
+        <Stack spacing={1}>
+          <Stack direction={'row'} alignItems={'flex-end'} spacing={0.5}>
+            <Typography sx={text14B}>AM</Typography>
+            <Typography sx={{ ...text12 }}>
+              {date && `${date.date} (${CALENDAR_HEAD[date.day]})`}
+            </Typography>
+          </Stack>
+          {times &&
+            times.am.map((time, index) => (
+              <TimeTableHour
+                today={today}
+                time={time}
                 minutes={minutes}
-                discount={discount}
+                blocked={blocked[time.day]}
+                discounts={discounts[time.day]}
                 booked={booked}
-                lessons={lessons}
-                blocked={blocked}
-                bookingTimes={bookingTimes}
-                isToday={isToday}
-                handleClick={handleClick}
-              />
-            );
-          })}
-      </Stack>
-      <Stack sx={{ width: '100%' }} spacing={{ xs: 0.5, sm: 1 }}>
-        <Typography
-          variant='h5'
-          align='center'
-          sx={{ fontWeight: 700, border: 1, py: 0.5 }}
-        >
-          오후 (PM)
-        </Typography>
-        {timeList &&
-          timeList[1].map((hour, index) => {
-            return (
-              <TimeTableButton
+                bookings={bookings}
+                onClick={handleTime}
                 key={index}
-                hour={hour}
-                minutes={minutes}
-                discount={discount}
-                booked={booked}
-                lessons={lessons}
-                blocked={blocked}
-                bookingTimes={bookingTimes}
-                isToday={isToday}
-                handleClick={handleClick}
               />
-            );
-          })}
+            ))}
+        </Stack>
+      )}
+      <Stack spacing={1}>
+        <Stack direction={'row'} alignItems={'flex-end'} spacing={0.5}>
+          <Typography sx={text14B}>PM</Typography>
+          <Typography sx={{ ...text12 }}>
+            {date && `${date.date} (${CALENDAR_HEAD[date.day]})`}
+          </Typography>
+        </Stack>
+        {times &&
+          times.pm.map((time, index) => (
+            <TimeTableHour
+              today={today}
+              time={time}
+              minutes={minutes}
+              blocked={blocked[time.day]}
+              discounts={discounts[time.day]}
+              booked={booked}
+              bookings={bookings}
+              onClick={handleTime}
+              key={index}
+            />
+          ))}
       </Stack>
+      {NEXT_DATE_TIME_PERIOD > 0 && (
+        <Stack spacing={1}>
+          <Stack direction={'row'} alignItems={'flex-end'} spacing={0.5}>
+            <Typography sx={text14B}>AM</Typography>
+            <Typography sx={{ ...text12 }}>
+              {nextDate && `${nextDate.date} (${CALENDAR_HEAD[nextDate.day]})`}
+            </Typography>
+          </Stack>
+          {times &&
+            times.next.map((time, index) => (
+              <TimeTableHour
+                today={today}
+                time={time}
+                minutes={minutes}
+                blocked={blocked[time.day]}
+                discounts={discounts[time.day]}
+                booked={booked}
+                bookings={bookings}
+                onClick={handleTime}
+                key={index}
+              />
+            ))}
+        </Stack>
+      )}
     </Stack>
   );
+};
+
+const TimeTableHour = ({
+  today,
+  time,
+  minutes,
+  blocked = [],
+  discounts = {},
+  booked = [],
+  bookings = [],
+  onClick,
+}) => {
+  if (today && time) {
+    if (today.date === time.date && today.hour > time.hour) return <></>;
+    const isSameHour = today.date === time.date && today.hour === time.hour;
+    const disableMinute = Number(today.minute) + 10;
+    return (
+      <Stack direction={'row'} spacing={1}>
+        {minutes &&
+          minutes.map((minute, index) => {
+            const tempTime = `${time.hour}:${minute}:00`;
+            const tempDateTime = `${time.date} ${tempTime}`;
+            const disabled =
+              (isSameHour && disableMinute > minute) ||
+              blocked.includes(tempTime) ||
+              booked.includes(tempDateTime);
+            const isSelected = bookings.includes(tempDateTime);
+
+            return (
+              <Stack
+                justifyContent={'center'}
+                alignItems={'center'}
+                spacing={0.3}
+                sx={{
+                  width: '100%',
+                  height: 44,
+                  border: 1,
+                  borderColor: disabled
+                    ? 'grey.100'
+                    : discounts[tempTime]
+                    ? 'error.main'
+                    : '',
+                  bgcolor: disabled
+                    ? 'grey.100'
+                    : isSelected
+                    ? 'common.black'
+                    : '',
+                }}
+                onClick={
+                  disabled
+                    ? () => {}
+                    : () =>
+                        onClick({
+                          ...time,
+                          minute,
+                          discount: discounts[tempTime] || 0,
+                        })
+                }
+                key={index}
+              >
+                <Typography
+                  sx={{
+                    ...text14,
+                    color: !disabled && isSelected ? 'common.white' : '',
+                  }}
+                >
+                  {`${time.hour}:${minute}`}
+                </Typography>
+                {discounts[tempTime] && !disabled && (
+                  <Typography sx={{ ...text11, color: 'error.main' }}>
+                    {`${discounts[tempTime]}%`}
+                  </Typography>
+                )}
+              </Stack>
+            );
+          })}
+      </Stack>
+    );
+  }
+  return <></>;
 };
 
 export default TimeTable;

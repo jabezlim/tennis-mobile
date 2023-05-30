@@ -12,6 +12,9 @@ import {
 // graphql
 import { useQuery } from '@apollo/client';
 import { STORES_QUERY } from 'graphql/query';
+// config
+import { selectMenuPaperSX, selectSX } from 'config/styles';
+// import { ChevronDownIcon } from 'config/icons';
 
 const Store = ({
   storeId,
@@ -62,7 +65,7 @@ const Store = ({
     <Box sx={{ width: '100%', ...sx }}>
       <FormControl
         fullWidth
-        color='tennis'
+        color='black'
         size={size}
         error={required && !store}
         disabled={disabled}
@@ -76,6 +79,16 @@ const Store = ({
           value={store}
           label='지점명을 꼭 확인해 주세요'
           onChange={handleChange}
+          // IconComponent={(props) => (
+          //   <ChevronDownIcon
+          //     {...props}
+          //     sx={{ width: 7.4, height: 12, mr: 2 }}
+          //   />
+          // )}
+          sx={selectSX}
+          MenuProps={{
+            PaperProps: { sx: selectMenuPaperSX },
+          }}
         >
           {allitem && <MenuItem value='all-items'>모든 지점</MenuItem>}
           {stores.map((store, index) => (

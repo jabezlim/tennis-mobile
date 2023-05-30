@@ -1,3 +1,1 @@
-export { default as LoginForm } from './LoginForm';
-export { default as PasswordForm } from './PasswordForm';
-export { default as RegisterForm } from './RegisterForm';
+export { default as Terms } from './Terms';

@@ -68,6 +68,8 @@ const cache = new InMemoryCache({
           },
         },
         clt_bookings: mergeCache,
+        clt_bookings_type: mergeCache,
+        clt_membervideos: mergeCache,
         clt_payments: mergeCache,
       },
     },

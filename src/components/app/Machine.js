@@ -1,16 +1,19 @@
+import { keyBy } from 'lodash';
 import { useState } from 'react';
 // material
 import {
   Box,
   FormControl,
   FormHelperText,
-  InputLabel,
   MenuItem,
   Select,
 } from '@mui/material';
 // graphql
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { MACHINES_QUERY } from 'graphql/query';
+// config
+import { selectMenuPaperSX, selectSX } from 'config/styles';
+// import { ChevronDownIcon } from 'config/icons';
 // helper
 import { storeDataVar } from 'helpers/cache';
 
@@ -26,15 +29,17 @@ const Machine = ({
   // data
   const [machine, setMachine] = useState(allitem ? 'all-items' : '');
   const [machines, setMachines] = useState([]);
+  const [machineNames, setMachineNames] = useState();
   // graphql
   useQuery(MACHINES_QUERY, {
     variables: { storeId: id ? id : storeData.id },
     onCompleted: (data) => {
       if (data.clt_machines && data.clt_machines.length > 0) {
         setMachines(data.clt_machines);
+        setMachineNames(keyBy(data.clt_machines, 'id'));
         if (!allitem) {
           setMachine(data.clt_machines[0].id);
-          handleMachineId(data.clt_machines[0].id);
+          handleMachineId(data.clt_machines[0].id, data.clt_machines[0].name);
         }
       }
     },
@@ -44,8 +49,11 @@ const Machine = ({
     setMachine(event.target.value);
     handleMachineId(event.target.value);
   };
-  const handleMachineId = (machineId) => {
-    if (handleMachine) handleMachine(machineId);
+  const handleMachineId = (id, name) => {
+    if (handleMachine) {
+      if (!name) name = machineNames[id].name;
+      handleMachine(id, name);
+    }
   };
 
   return (
@@ -53,18 +61,24 @@ const Machine = ({
       <FormControl
         fullWidth
         size={size}
-        color='tennis'
+        color='black'
         error={required && !machine}
       >
-        <InputLabel id='machine-select-label'>
-          코트{required && ' *'}
-        </InputLabel>
         <Select
           labelId='machine-select-label'
           id='machine-select'
           value={machine}
-          label='Court'
           onChange={handleChange}
+          // IconComponent={(props) => (
+          //   <ChevronDownIcon
+          //     {...props}
+          //     sx={{ width: 7.4, height: 12, mr: 2 }}
+          //   />
+          // )}
+          sx={selectSX}
+          MenuProps={{
+            PaperProps: { sx: selectMenuPaperSX },
+          }}
         >
           {allitem && <MenuItem value='all-items'>모든 코트</MenuItem>}
           {machines.map((machine, index) => (

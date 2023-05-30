@@ -16,7 +16,7 @@ export const path = {
     home: '/home',
     memberBarcode: '/member/barcode',
     memberVideos: '/member/videos',
-    bookings: '/booking/bookings',
+    booking: '/booking/booking',
     bookingEdit: '/booking/booking-edit',
     tickets: '/ticket/tickets',
     ticketLesson: '/ticket/lesson',

@@ -1,65 +1,83 @@
-import { useEffect, useState } from 'react';
+import * as Yup from 'yup';
+import { useEffect, useRef, useState } from 'react';
 // material
-import {
-  Alert,
-  Button,
-  Snackbar,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Stack, TextField, Typography } from '@mui/material';
+// form
+import { useFormik, Form, FormikProvider } from 'formik';
 // graphql
 import { useMutation } from '@apollo/client';
 import { CONFIRM_CODE_QUERY } from 'graphql/mutation';
+// components
+import { TButton } from 'components/ui';
+import { MessageAlert } from 'components/ui/snackbar';
+// config
+import { text11, text12 } from 'config/styles';
 // utils
 import { convertSecondsToFormat } from 'utils/formatDateTime';
 // hooks
 import { useInterval } from 'hooks';
 
+const INIT_VALUES = {
+  phone_1: '',
+  phone_2: '',
+  phone_3: '',
+  phone_4: '',
+  phone_5: '',
+  phone_6: '',
+};
 const ConfirmCode = ({
   store,
   phone,
-  isMember,
-  isDone = false,
-  prevPhone,
-  setConfirmCode,
-  handleConfirm,
+  time,
+  label = '인증하기',
+  handleCode,
 }) => {
+  const alertRef = useRef();
   // data
   const [count, setCount] = useState(0);
-  const [disableCount, setDisableCount] = useState(0);
-  const [code, setCode] = useState('');
-  const [readOnly, setReadOnly] = useState(true);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    severity: 'error',
-    message: '',
-  });
+  // const [showCount, setShowCount] = useState(0);
+  const [message, setMessage] = useState();
+
   // graphql
   const [getConfirmCode] = useMutation(CONFIRM_CODE_QUERY, {
     onCompleted: (data) => {
       if (data.clt_confirmcode.status) {
         setCount(600);
-        setDisableCount(10);
-        setReadOnly(false);
-        setSnackbar({
-          open: true,
-          severity: 'success',
-          message: '인증코드가 전송되었습니다.',
-        });
-      } else {
-        setCount(0);
-        setDisableCount(0);
-        setReadOnly(true);
-        setSnackbar({
-          open: true,
-          severity: 'error',
-          message: data.clt_confirmcode.message,
-        });
+        alertRef.current.open();
+        // setShowCount(3);
       }
     },
     onError: (error) => console.log(error),
   });
+
+  const ConfirmSchema = Yup.object().shape({
+    phone_1: Yup.string().required('인증코드를 입력하세요.'),
+    phone_2: Yup.string().required('인증코드를 입력하세요.'),
+    phone_3: Yup.string().required('인증코드를 입력하세요.'),
+    phone_4: Yup.string().required('인증코드를 입력하세요.'),
+    phone_5: Yup.string().required('인증코드를 입력하세요.'),
+    phone_6: Yup.string().required('인증코드를 입력하세요.'),
+  });
+  const formik = useFormik({
+    initialValues: INIT_VALUES,
+    validationSchema: ConfirmSchema,
+    onSubmit: (values) => {
+      const code =
+        values.phone_1 +
+        values.phone_2 +
+        values.phone_3 +
+        values.phone_4 +
+        values.phone_5 +
+        values.phone_6;
+      handleCode(code);
+    },
+  });
+
+  useEffect(() => {
+    if (time) {
+      setCount(time);
+    }
+  }, [time]);
 
   useInterval(
     () => {
@@ -70,135 +88,152 @@ const ConfirmCode = ({
     count === 0 ? null : 1000
   );
 
-  useInterval(
-    () => {
-      setDisableCount((prevData) => {
-        return prevData - 1;
-      });
-    },
-    disableCount === 0 ? null : 1000
-  );
-
-  useEffect(() => {
-    if (code && code.length === 6) {
-      if (setConfirmCode) setConfirmCode(code);
-    }
-    // eslint-disable-next-line
-  }, [code]);
-
-  useEffect(() => {
-    if (isDone) {
-      setCode('');
-      setCount(0);
-      setDisableCount(0);
-      setReadOnly(true);
-    }
-  }, [isDone]);
+  // useInterval(
+  //   () => {
+  //     setShowCount((prevData) => {
+  //       return prevData - 1;
+  //     });
+  //   },
+  //   showCount === 0 ? null : 1000
+  // );
 
   const handleChange = (e) => {
-    setCode(e.target.value);
-  };
-  const handleConfirmCode = () => {
-    if (prevPhone && prevPhone === phone) {
-      setSnackbar({
-        open: true,
-        severity: 'error',
-        message: '새로운 핸드폰 번호를 입력하세요.',
-      });
-      if (handleConfirm) {
-        handleConfirm('check_phone');
-      }
-      return;
-    }
+    const { maxLength, value, id } = e.target;
+    const code = Number(id.replace('code_', ''));
 
-    if (phone && phone.length > 9 && store) {
+    setFieldValue(`phone_${code}`, value);
+
+    if (value.length >= maxLength && code < 6) {
+      const nextSibling = document.querySelector(`input[id=code_${code + 1}]`);
+      if (nextSibling !== null) {
+        nextSibling.focus();
+      }
+    }
+  };
+  const handleResendCode = () => {
+    if (store && phone) {
       const variables = {
-        store: parseInt(store),
+        store: store,
         phone: phone,
+        isMember: true,
       };
-      if (isMember) {
-        variables.isMember = isMember;
-      }
-      if (prevPhone) {
-        variables.prevPhone = prevPhone;
-      }
+      setMessage();
       getConfirmCode({ variables });
-    } else {
-      setSnackbar({
-        open: true,
-        severity: 'error',
-        message: '핸드폰 번호를 확인하세요.',
-      });
-      if (handleConfirm) {
-        handleConfirm('check_phone');
-      }
     }
   };
-  const handleCloseSnackbar = (_, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbar({
-      open: false,
-      severity: 'error',
-      message: '',
-    });
-  };
+
+  const { errors, touched, handleSubmit, setFieldValue } = formik;
 
   return (
-    <>
-      <Stack spacing={0.7}>
-        <Stack direction='row' spacing={1}>
-          <TextField
-            fullWidth
-            color='tennis'
-            autoComplete='code'
-            type='text'
-            label='인증코드 (6자리) *'
-            value={code}
-            onChange={handleChange}
-            InputProps={{ readOnly: readOnly }}
-          />
-          <Button
-            variant='contained'
-            color='error'
-            sx={{ width: 200, fontWeight: 700 }}
-            onClick={handleConfirmCode}
-            disabled={disableCount > 0}
-          >
-            인증코드 받기
-          </Button>
-        </Stack>
-        <Stack direction={'row'} justifyContent='space-between'>
-          <Typography variant='body2'>
-            10분 이내로 인증코드를 입력해 주세요.
-          </Typography>
-          <Typography variant='body2' color={'error'} sx={{ fontWeight: 700 }}>
-            {count > 0 && convertSecondsToFormat(count)}
-          </Typography>
-        </Stack>
-      </Stack>
-      <Snackbar
-        open={snackbar.open}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant='filled'
-          sx={{ width: '100%' }}
-        >
+    <FormikProvider value={formik}>
+      <Form autoComplete='off' noValidate>
+        <Stack spacing={1.65} sx={{ px: 2, py: 0.5 }}>
           <Typography
-            variant='h5'
-            sx={{ color: 'common.white', fontSize: 18, fontWeight: 700 }}
+            sx={{
+              fontWeight: 700,
+              fontSize: 32,
+              lineHeight: '32px',
+              mt: 15,
+              mb: 0.4,
+            }}
           >
-            {snackbar.message}
+            인증코드 입력
           </Typography>
-        </Alert>
-      </Snackbar>
-    </>
+
+          <Stack spacing={1} sx={{ pb: 5 }}>
+            <Typography sx={text12}>
+              인증코드가 입력하신 전화번호로 발송되었습니다.
+            </Typography>
+            <Typography sx={text12}>
+              10분 이내로 인증을 완료해주세요.
+            </Typography>
+          </Stack>
+
+          <Stack spacing={1} sx={{ pb: 11 }}>
+            <Stack direction='row' spacing={1.5}>
+              {[1, 2, 3, 4, 5, 6].map((number) => (
+                <ConfirmText
+                  key={number}
+                  id={number}
+                  error={Boolean(
+                    touched[`phone_${number}`] && errors[`phone_${number}`]
+                  )}
+                  handleChange={handleChange}
+                />
+              ))}
+            </Stack>
+            <Stack direction={'row'} justifyContent={'space-between'}>
+              <Typography sx={text12}>
+                {count > 0 && convertSecondsToFormat(count)}
+              </Typography>
+              {message && (
+                <Typography color={'error'} sx={{ fontWeight: 500, ...text12 }}>
+                  {message}
+                </Typography>
+              )}
+            </Stack>
+          </Stack>
+
+          <Stack direction={'row'} justifyContent={'space-between'}>
+            <Typography sx={text11}>인증 코드를 받지 못하셨나요?</Typography>
+            <Typography
+              color={'error'}
+              sx={{ fontWeight: 500, ...text11 }}
+              onClick={handleResendCode}
+            >
+              인증 코드 다시 받기
+            </Typography>
+          </Stack>
+          <TButton label={label} onClick={handleSubmit} />
+          <MessageAlert
+            ref={alertRef}
+            message='인증코드가 재전송 되었습니다.'
+          />
+          {/* {showCount > 0 && (
+            <Stack sx={{ pt: 10 }}>
+              <TButton
+                label='인증코드가 재전송 되었습니다.'
+                sx={{ opacity: 0.8 }}
+              />
+            </Stack>
+          )} */}
+        </Stack>
+      </Form>
+    </FormikProvider>
+  );
+};
+
+const ConfirmText = ({ id, error = false, handleChange }) => {
+  return (
+    <TextField
+      fullWidth
+      autoFocus={id === 1 ? true : false}
+      type='text'
+      variant='outlined'
+      color='black'
+      id={`code_${id}`}
+      error={error}
+      sx={{
+        '& fieldset': {
+          borderRadius: 0,
+          borderWidth: 0,
+        },
+        '& .Mui-error fieldset': {
+          borderWidth: 2,
+        },
+      }}
+      inputProps={{
+        maxLength: 1,
+        sx: {
+          height: '1.215em',
+          textAlign: 'center',
+          borderRadius: 0,
+          backgroundColor: 'grey.100',
+        },
+      }}
+      onChange={handleChange}
+      onFocus={(e) => e.target.select()}
+    />
   );
 };
 

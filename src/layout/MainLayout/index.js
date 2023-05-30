@@ -21,7 +21,7 @@ import { drawerWidth } from 'config/constants';
 // project imports
 import Header from './Header';
 import Sidebar from './Sidebar';
-import BackToTop from './BackToTop';
+import BackToTop from '../../components/app/BackToTop';
 import { MessageModal } from 'components/ui/modal';
 import Footer from './Footer';
 

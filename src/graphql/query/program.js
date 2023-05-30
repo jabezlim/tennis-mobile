@@ -17,7 +17,9 @@ export const PROGRAMS_QUERY = gql`
       lesson_type
       lesson_limit
       lesson_day
-      lesson_time
+      lesson_start_date
+      lesson_start_time
+      lesson_end_time
       menu_type
       sort
     }

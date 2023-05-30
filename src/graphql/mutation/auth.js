@@ -22,13 +22,13 @@ export const CONFIRM_CODE_QUERY = gql`
     $store: ID!
     $phone: String!
     $isMember: Boolean
-    $prevPhone: String
+    $newPhone: String
   ) {
     clt_confirmcode(
       store_id: $store
       phone: $phone
       is_member: $isMember
-      prev_phone: $prevPhone
+      new_phone: $newPhone
     ) {
       status
       message
@@ -37,17 +37,19 @@ export const CONFIRM_CODE_QUERY = gql`
 `;
 
 export const REGISTER_QUERY = gql`
-  mutation Register(
-    $storeId: ID!
-    $phone: String!
-    $password: String!
-    $code: String!
-  ) {
-    clt_register(
+  mutation Register($storeId: ID!, $phone: String!, $code: String!) {
+    clt_register(store_id: $storeId, phone: $phone, code: $code) {
+      status
+      message
+    }
+  }
+`;
+export const REGISTER_CONFIRM_QUERY = gql`
+  mutation Register($storeId: ID!, $phone: String!, $password: String!) {
+    clt_register_confirm(
       store_id: $storeId
       phone: $phone
       password: $password
-      code: $code
     ) {
       status
       message

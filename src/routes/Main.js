@@ -1,16 +1,17 @@
 import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
-// project imports
-import MainLayout from 'layout/MainLayout';
+// components
 import Loadable from 'components/ui/Loadable';
+// layout
+import { Layout } from 'layout';
 // helper
 import { checkLoggedIn } from 'helpers/storage';
 // config
 import { path } from 'config/path';
 
-// inventory routing
-const Home = Loadable(lazy(() => import('pages/Home')));
-const BookingItems = Loadable(lazy(() => import('pages/booking/Booking')));
+// tennis routing
+const Home = Loadable(lazy(() => import('pages/home/Home')));
+const Booking = Loadable(lazy(() => import('pages/booking/Booking')));
 const BookingEdit = Loadable(lazy(() => import('pages/booking/BookingEdit')));
 const TicketItems = Loadable(lazy(() => import('pages/ticket/Ticket')));
 const TicketLesson = Loadable(lazy(() => import('pages/ticket/Lesson')));
@@ -25,7 +26,7 @@ const PrivateRoute = ({ component: Component }) => {
 
 const Main = {
   path: path.urls.default,
-  element: <MainLayout />,
+  element: <Layout />,
   children: [
     {
       path: path.urls.default,
@@ -36,8 +37,8 @@ const Main = {
       element: <PrivateRoute component={Home} />,
     },
     {
-      path: path.urls.bookings,
-      element: <PrivateRoute component={BookingItems} />,
+      path: path.urls.booking,
+      element: <PrivateRoute component={Booking} />,
     },
     {
       path: path.urls.bookingEdit,

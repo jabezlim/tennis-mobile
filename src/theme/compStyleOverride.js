@@ -1,6 +1,13 @@
 export const componentStyleOverrides = (theme) => {
   const bgColor = theme.colors?.grey50;
   return {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          color: theme.colors.black,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

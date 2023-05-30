@@ -3,6 +3,8 @@ import {
   addMonths,
   format,
   getDay,
+  isDate,
+  isValid,
   lastDayOfMonth,
   parseISO,
 } from 'date-fns';
@@ -44,7 +46,26 @@ export const getNewDate = (year, month, type) => {
   };
 };
 
-export const checkBookDate = (date, lesson, booked) => {
+export const checkBookDate = (date, period, booked) => {
+  let result = true;
+  const currentDate = parseISO(date);
+  if (isValid(currentDate)) {
+    for (let i = 0; i < period; i++) {
+      const temp = format(addDays(currentDate, i * 7), DATE_FORMAT);
+      if (booked && booked[temp]) {
+        if (
+          booked[temp].booking ||
+          booked[temp].booked === booked[temp].limit
+        ) {
+          result = false;
+          break;
+        }
+      }
+    }
+  } else result = false;
+  return result;
+};
+export const checkBookDateOLD = (date, lesson, booked) => {
   let result = true;
   const currentDate = parseISO(date);
   for (let i = 0; i < Number(lesson.period); i++) {

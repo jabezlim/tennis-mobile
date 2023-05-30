@@ -38,6 +38,13 @@ export const convertSecondsToFormat = (s, f) => {
   return format(new Date(s * 1000), f);
 };
 
+export const fDateToDot = (date) => {
+  return date.replaceAll('-', '.');
+};
+export const fHmsToHm = (time) => {
+  return time.substring(0, 5);
+};
+
 // for ie
 export const fDateIE = (date) => {
   return date.substring(0, 10);

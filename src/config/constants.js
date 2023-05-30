@@ -22,15 +22,34 @@ export const IMAGE_MENU_MAX_HEIGHT = 700;
 export const DefaultDate = '2022-01-01';
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const TIME_FORMAT = 'HH:mm:ss';
+export const DATE_DAY_FORMAT = 'MM/dd EEE';
+export const YMD_DAY_FORMAT = 'yyyy.MM.dd EEE';
+export const DATE_HOUR_FORMAT = 'yyyy-MM-dd HH';
 export const DATETIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 export const TIME_FORMAT_AM_PM = 'hh:mm a';
+
+export const NEXT_DATE_TIME_PERIOD = 2; // get next date time for 2 hours
 
 // data constant
 export const HOME_LIST = [
   // { label: '바코드보기', path: path.urls.memberBarcode },
-  { label: '예약하기', path: path.urls.bookingEdit, icon:<AccessAlarmIcon sx={{":first-of-type" : {fontSize : '40px'}}} />},
-  { label: '시설이용권', path: path.urls.ticketMachine, icon:<ConfirmationNumberIcon sx={{":first-of-type" : {fontSize : '40px'}}} /> },
-  { label: '레슨수강', path: path.urls.ticketLesson, icon:<SportsTennisIcon sx={{":first-of-type" : {fontSize : '40px'}}} /> },
+  {
+    label: '예약하기',
+    path: path.urls.bookingEdit,
+    icon: <AccessAlarmIcon sx={{ ':first-of-type': { fontSize: '40px' } }} />,
+  },
+  {
+    label: '시설이용권',
+    path: path.urls.ticketMachine,
+    icon: (
+      <ConfirmationNumberIcon sx={{ ':first-of-type': { fontSize: '40px' } }} />
+    ),
+  },
+  {
+    label: '레슨수강',
+    path: path.urls.ticketLesson,
+    icon: <SportsTennisIcon sx={{ ':first-of-type': { fontSize: '40px' } }} />,
+  },
 ];
 
 export const CALENDAR_HEAD = ['일', '월', '화', '수', '목', '금', '토'];
@@ -53,22 +72,22 @@ export const DAY_OF_WEEK_CODE = {
   saturday: 6,
 };
 export const DAY_OF_WEEK_KO = {
-  monday: '월요일',
-  tuesday: '화요일',
-  wednesday: '수요일',
-  thursday: '목요일',
-  friday: '금요일',
-  saturday: '토요일',
-  sunday: '일요일',
+  monday: '월',
+  tuesday: '화',
+  wednesday: '수',
+  thursday: '목',
+  friday: '금',
+  saturday: '토',
+  sunday: '일',
 };
 export const DAY_OF_WEEK_LABEL_VALUE = [
-  { value: 'monday', label: '월요일' },
-  { value: 'tuesday', label: '화요일' },
-  { value: 'wednesday', label: '수요일' },
-  { value: 'thursday', label: '목요일' },
-  { value: 'friday', label: '금요일' },
-  { value: 'saturday', label: '토요일' },
-  { value: 'sunday', label: '일요일' },
+  { value: 'monday', label: '월' },
+  { value: 'tuesday', label: '화' },
+  { value: 'wednesday', label: '수' },
+  { value: 'thursday', label: '목' },
+  { value: 'friday', label: '금' },
+  { value: 'saturday', label: '토' },
+  { value: 'sunday', label: '일' },
 ];
 
 export const CATEGORIES = [
@@ -76,7 +95,7 @@ export const CATEGORIES = [
   { value: '2', label: '시설이용권' },
 ];
 export const CATEGORY_TYPE = {
-  1: '레슨수강',
+  1: '레슨',
   2: '시설이용권',
 };
 
@@ -93,12 +112,12 @@ export const LESSON_TYPE = {
 };
 export const PAY_TYPE = {
   0: '관리자 등록',
-  1: '카드',
+  1: '신용카드',
   2: '현금',
 };
 export const PAY_TO = {
-  kiosk: '지점 결제',
-  mobile: '모바일 결제',
+  kiosk: '지점결제',
+  mobile: '모바일결제',
 };
 export const BOOKING_TYPE = {
   machine: '스크린 로봇, 코트',

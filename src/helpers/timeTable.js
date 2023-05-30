@@ -1,7 +1,7 @@
-import { forEach, sortBy } from 'lodash';
+import { forEach, isEmpty, sortBy } from 'lodash';
 import { addMinutes, differenceInMinutes, format, parseISO } from 'date-fns';
 // config
-import { TIME_FORMAT } from 'config/constants';
+import { DATETIME_FORMAT, TIME_FORMAT } from 'config/constants';
 
 const BOOK_COLORS = ['primary', 'error', 'orange', 'warning', 'success'];
 
@@ -47,6 +47,17 @@ export const createLessonBookedData = (lessons) => {
   return {};
 };
 
+export const createMachineData = (data, key) => {
+  if (data.length > 0 && !isEmpty(key)) {
+    const temp = {};
+    forEach(data, (d) => {
+      if (!temp[d[key]]) temp[d[key]] = [];
+      temp[d[key]].push(d);
+    });
+    return temp;
+  }
+  return {};
+};
 export const createMachineBlockedData = (blocked) => {
   if (blocked.length > 0) {
     const temp = {};
@@ -62,14 +73,15 @@ export const createMachineBlockedData = (blocked) => {
   return {};
 };
 
-export const createContinuousTime = (times, period) => {
+export const createContinuousTime = (times, period, type = 'datetime') => {
   const sortedTimes = sortBy(times, (t) => t);
   const selectedTimes = [];
   const startTime = parseISO(sortedTimes[0]);
   const endTime = parseISO(sortedTimes[1]);
   const periodTime = differenceInMinutes(endTime, startTime) / period;
+  const timeFormat = type === 'time' ? TIME_FORMAT : DATETIME_FORMAT;
   for (let i = 0; i <= periodTime; i++) {
-    selectedTimes.push(format(addMinutes(startTime, i * period), TIME_FORMAT));
+    selectedTimes.push(format(addMinutes(startTime, i * period), timeFormat));
   }
   return selectedTimes;
 };

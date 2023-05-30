@@ -22,11 +22,12 @@ export const MEMBER_TIMES_QUERY = gql`
 `;
 
 export const MEMBER_VIDEOS_QUERY = gql`
-  query GetMemberTimes(
+  query GetMemberVideos(
     $storeId: ID!
     $memberId: ID!
     $limit: Int!
     $offset: Int!
+    $search: String
   ) {
     currentStoreId @client @export(as: "storeId")
     currentMemberId @client @export(as: "memberId")
@@ -35,6 +36,7 @@ export const MEMBER_VIDEOS_QUERY = gql`
       member_id: $memberId
       limit: $limit
       offset: $offset
+      search: $search
     ) {
       items {
         id

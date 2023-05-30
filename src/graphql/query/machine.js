@@ -32,8 +32,18 @@ export const MACHINE_BLOCKED_QUERY = gql`
 `;
 
 export const MACHINE_BOOKED_QUERY = gql`
-  query GetMachineBooked($storeId: ID!, $date: String!) {
-    clt_machinebooked(store_id: $storeId, date: $date) {
+  query GetMachineBooked(
+    $storeId: ID!
+    $date: String!
+    $nextDate: String
+    $nextTime: String
+  ) {
+    clt_machinebooked(
+      store_id: $storeId
+      date: $date
+      next_date: $nextDate
+      next_time: $nextTime
+    ) {
       machine_id
       start_date
       start_time
