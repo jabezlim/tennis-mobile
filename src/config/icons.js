@@ -34,7 +34,7 @@ export const PersonIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
       icon='person'
-      sx={{ width: 16, height: 16, ...sx }}
+      sx={{ width: 20, height: 20, ...sx }}
       onClick={onClick}
     />
   );
@@ -191,7 +191,7 @@ export const HomeIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
       icon='home'
-      sx={{ width: 16, height: 18, ...sx }}
+      sx={{ width: 24, height: 24, ...sx }}
       onClick={onClick}
     />
   );

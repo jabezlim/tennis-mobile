@@ -26,7 +26,7 @@ const PageContainer = ({ label, children }) => {
           mt: 2,
           p: 2,
           borderBottom: label ? 1 : 0,
-          borderColor: 'grey.200',
+          borderColor: 'tennis.200',
         }}
       >
         {label && <Typography sx={text18B}>{label}</Typography>}

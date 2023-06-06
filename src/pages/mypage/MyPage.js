@@ -85,7 +85,7 @@ const MyPage = forwardRef((_, ref) => {
           </Stack>
           <TButton
             label='회원정보 수정'
-            color='grey'
+            color='tennis'
             onClick={() => handleNavigate('profile')}
             sx={{ width: 110, height: 28, ...text12 }}
           />

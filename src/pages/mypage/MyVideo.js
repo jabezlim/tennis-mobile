@@ -271,7 +271,7 @@ const SButton = ({ label, search, value, onClick }) => {
       sx={{
         height: 44,
         border: 1,
-        borderColor: search === value ? 'common.black' : 'grey.800',
+        borderColor: search === value ? 'tennis.main' : 'grey.800',
       }}
       onClick={onClick}
     />

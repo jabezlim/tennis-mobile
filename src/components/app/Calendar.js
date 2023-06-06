@@ -82,7 +82,7 @@ const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
       <Stack direction={'row'} alignItems={'center'} spacing={1.5}>
         {isMonth && (
           <ChevronLeftIcon
-            color='grey'
+            color='tennis'
             sx={{ width: 7.4, height: 12 }}
             onClick={() => handleClick('prev')}
           />
@@ -90,7 +90,7 @@ const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
         <Typography sx={text20B}>{`${year}.${month}`}</Typography>
         {isMonth && (
           <ChevronRightIcon
-            color='grey'
+            color='tennis'
             sx={{ width: 7.4, height: 12 }}
             onClick={() => handleClick('next')}
           />
@@ -116,7 +116,7 @@ const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
         <Fade in={!isMonth}>
           <Box sx={{ display: isMonth ? 'none' : 'block' }}>
             <ChevronDownIcon
-              color='grey'
+              color='tennis'
               sx={{ width: 12, height: 7.4 }}
               onClick={() => handleToggleCalendar(true)}
             />
@@ -136,7 +136,7 @@ const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
             sx={{ display: onlyMonth ? 'none' : isMonth ? 'block' : 'none' }}
           >
             <ChevronUpIcon
-              color='grey'
+              color='tennis'
               sx={{ width: 12, height: 7.4 }}
               onClick={() => handleToggleCalendar(false)}
             />

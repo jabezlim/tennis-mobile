@@ -122,7 +122,7 @@ const Home = () => {
           direction={'row'}
           justifyContent={'space-between'}
           alignItems={'center'}
-          sx={{ height: 32, bgcolor: 'grey.200', px: 2 }}
+          sx={{ height: 32, bgcolor: 'tennis.200', px: 2 }}
         >
           <Typography sx={text14}>회원 코드</Typography>
           <Typography sx={text14}>{/* 플레이중 */}</Typography>

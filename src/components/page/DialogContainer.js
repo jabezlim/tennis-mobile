@@ -51,7 +51,7 @@ const DialogContainer = forwardRef(
               mt: 2,
               p: 2,
               borderBottom: 1,
-              borderColor: 'grey.200',
+              borderColor: 'tennis.200',
             }}
           >
             <ArrowBackIcon onClick={handleClose} />

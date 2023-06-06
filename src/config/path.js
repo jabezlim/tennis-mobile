@@ -5,7 +5,7 @@ export const image_path =
 
 export const path = {
   image: image_path,
-  basename: '/tennis/clt',
+  basename: '/tennis/mob',
   default: '/home',
   urls: {
     default: '/',

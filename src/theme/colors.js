@@ -1,7 +1,7 @@
 export const colors = {
   // common
   white: '#ffffff',
-  black: '#000000',
+  black: '#000000', //'#218957',//
   // paper & background
   paper: '#ffffff',
   // primary
@@ -11,11 +11,11 @@ export const colors = {
   primaryDark: '#1e88e5',
   primary800: '#1565c0',
   // secondary
-  secondaryLight: '#ede7f6',
-  secondary200: '#b39ddb',
-  secondaryMain: '#673ab7',
-  secondaryDark: '#5e35b1',
-  secondary800: '#4527a0',
+  secondaryLight: '#E8F8A3',//'#ede7f6',
+  secondary200: '#DDF573',//'#b39ddb',
+  secondaryMain: '#D1F144',//'#673ab7',
+  secondaryDark: '#78910B',//'#5e35b1',
+  secondary800: '#516207',//'#4527a0',
   // success
   successLight: '#b9f6ca',
   success200: '#69f0ae',
@@ -34,11 +34,11 @@ export const colors = {
   warningMain: '#ffe57f',
   warningDark: '#ffc107',
   // tennis
-  tennisLight: '#d5eb9f',
-  tennis200: '#c4e278',
-  tennisMain: '#ABD63E',
-  tennisDark: '#9ac138',
-  tennis800: '#78962b',
+  tennisLight: '#F4FCF8',//'#d5eb9f',
+  tennis200: '#BAEED5',//'#c4e278',
+  tennisMain: '#218957',//'#ABD63E',
+  tennisDark: '#17603D',//'#9ac138',
+  tennis800: '#0D3723',//'#78962b',
   // grey
   grey50: '#fafafa',
   // grey100: '#f5f5f5',
@@ -78,4 +78,18 @@ export const colors = {
   darkSecondaryDark: '#651fff',
   darkSecondary200: '#b39ddb',
   darkSecondary800: '#6200ea',
+
+  // green ===============================
+  green50 : '#F4FCF8',
+  green100 : '#E4F8EE',
+  green200 : '#BAEED5',
+  green300 : '#91E5BD',
+  green400 : '#68DBA4',
+  green500 : '#3FD18B',
+  green600 : '#2BB271',
+  green700 : '#218957',
+  green800 : '#17603D',
+  green900 : '#0D3723',
+  green1000 : '#030E09',
+  
 };

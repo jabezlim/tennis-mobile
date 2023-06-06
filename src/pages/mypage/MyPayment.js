@@ -281,7 +281,8 @@ const SButton = ({ label, search, value, onClick }) => {
       sx={{
         height: 44,
         border: 1,
-        borderColor: search === value ? 'common.black' : 'grey.800',
+        borderColor: search === value ? 'tennis.main' : 'grey.800',
+        color: search === value ? 'tennis.main' : 'grey.800',
       }}
       onClick={onClick}
     />
@@ -310,7 +311,7 @@ const SearchDialog = ({ open, setOpen, search, onClick }) => {
           sx={{ position: 'absolute', top: 24, right: 21 }}
           onClick={() => setOpen(false)}
         />
-        <Typography sx={{ ...text14, pt: 1, pb: 2.5 }}>예약하기</Typography>
+        <Typography sx={{ ...text14, pt: 1, pb: 2.5 }}>구매내역</Typography>
         <Stack spacing={4}>
           <Stack spacing={1}>
             <Typography sx={{ ...text16B, pb: 1 }}>조회 기간</Typography>

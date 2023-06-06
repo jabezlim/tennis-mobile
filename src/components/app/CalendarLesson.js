@@ -179,14 +179,14 @@ const CalendarDate = ({
                 ? 'error.main'
                 : info.booked === info.limit ||
                   (!check && info.booked !== info.limit)
-                ? 'grey.200'
+                ? 'tennis.200'
                 : '',
               bgcolor:
                 (!info.booking && info.booked === info.limit) ||
                 (enabled && !check)
-                  ? 'grey.200'
+                  ? 'tennis.200'
                   : isSelected
-                  ? 'common.black'
+                  ? 'tennis.dark'
                   : '',
             }}
             onClick={

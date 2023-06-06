@@ -88,12 +88,12 @@ const Lesson = () => {
                 />
                 <GreyBox sx={{ p: 2, mx: 0 }}>
                   <Stack direction={'row'} justifyContent={'space-between'}>
-                    <Typography sx={{ ...text12, color: 'grey.800' }}>
+                    <Typography sx={{ ...text12, color: 'tennis.800' }}>
                       {item.user_name}
                     </Typography>
                     <Stack direction={'row'} spacing={0.25}>
                       <Stack
-                        sx={{ width: 16, height: 16, bgcolor: 'common.black' }}
+                        sx={{ width: 16, height: 16, bgcolor: 'tennis.dark' }}
                       >
                         <Typography
                           sx={{
@@ -106,12 +106,12 @@ const Lesson = () => {
                           {convertDayCodeToText(item.lesson_day)}
                         </Typography>
                       </Stack>
-                      <Stack sx={{ height: 16, px: 0.5, bgcolor: 'grey.400' }}>
+                      <Stack sx={{ height: 16, px: 0.5, bgcolor: 'tennis.400' }}>
                         <Typography
                           sx={{
                             ...text10,
                             lineHeight: '17px',
-                            color: 'common.white',
+                            color: 'common.black',
                           }}
                         >
                           {item.lesson_type === '1' ? '개인' : '단체'}

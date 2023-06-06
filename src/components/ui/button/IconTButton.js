@@ -5,7 +5,7 @@ import { text12 } from 'config/styles';
 
 const IconTButton = ({
   label = '',
-  color = 'black',
+  color = 'tennis',
   variant = 'contained',
   disabled = false,
   onClick,

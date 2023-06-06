@@ -209,12 +209,12 @@ const TimeTableHour = ({
                   borderColor: disabled
                     ? 'grey.100'
                     : discounts[tempTime]
-                    ? 'error.main'
+                    ? 'secondary.dark'
                     : '',
                   bgcolor: disabled
                     ? 'grey.100'
                     : isSelected
-                    ? 'common.black'
+                    ? 'secondary.main'
                     : '',
                 }}
                 onClick={
@@ -232,7 +232,7 @@ const TimeTableHour = ({
                 <Typography
                   sx={{
                     ...text14,
-                    color: !disabled && isSelected ? 'common.white' : '',
+                    color: !disabled && isSelected ? 'common.black' : '',
                   }}
                 >
                   {`${time.hour}:${minute}`}

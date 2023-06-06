@@ -6,7 +6,7 @@ import { text14 } from 'config/styles';
 const TButton = ({
   label = '',
   variant = 'contained',
-  color = 'black',
+  color = 'tennis',
   disabled = false,
   onClick,
   sx = {},

@@ -15,7 +15,7 @@ export const componentStyleOverrides = (theme) => {
           borderRadius: '4px',
         },
         containedTennis: {
-          color: theme.colors.black,
+          color: theme.colors.white, //black,
         },
         outlinedTennis: {
           color: theme.colors.black,

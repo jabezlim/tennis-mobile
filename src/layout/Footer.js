@@ -32,7 +32,7 @@ const Footer = ({ isDialog = false }) => {
           '& span.Mui-selected': {
             fontWeight: 700,
             fontSize: '0.75rem',
-            color: 'common.black',
+            color: 'tennis.main',
           },
         }}
       >
