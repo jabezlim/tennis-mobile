@@ -134,6 +134,7 @@ const Home = () => {
           >
             <QRCode
               value={getAuthBarcode()}
+              bgColor={'#E4F8EE'}
               style={{ height: '100%', maxWidth: '100%', width: '100%' }}
               viewBox={`0 0 256 256`}
             />
@@ -162,7 +163,7 @@ const Home = () => {
                 color='grey'
                 direction='row-reverse'
                 icon={<ChevronRightIcon sx={{ width: 5.48, height: 9.42 }} />}
-                sx={{ width: 96 }}
+                sx={{ width: 96, backgroundColor: 'transparent' }}
                 onClick={() => handleNavigate('payment')}
               />
             </Stack>
@@ -189,7 +190,7 @@ const Home = () => {
                 color='grey'
                 direction='row-reverse'
                 icon={<ChevronRightIcon sx={{ width: 5.48, height: 9.42 }} />}
-                sx={{ width: 96 }}
+                sx={{ width: 96, backgroundColor: 'transparent' }}
                 onClick={() => handleNavigate('booking')}
               />
             </Stack>
