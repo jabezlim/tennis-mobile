@@ -39,6 +39,7 @@ const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
     setYear(y);
     setMonth(m);
     setDate(d);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {

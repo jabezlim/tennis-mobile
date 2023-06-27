@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { format, getDay } from 'date-fns';
+import { getDay } from 'date-fns';
 // material
 import { Menu, Stack, Typography } from '@mui/material';
 // components
@@ -27,6 +27,7 @@ const CalendarForm = ({ label, handleDate }) => {
 
       handleSelectDate({ year: y, month: m, date: d, day: dd });
     }
+    // eslint-disable-next-line
   }, [date, day]);
 
   const handleClick = (event) => {

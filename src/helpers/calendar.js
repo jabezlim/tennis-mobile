@@ -3,7 +3,6 @@ import {
   addMonths,
   format,
   getDay,
-  isDate,
   isValid,
   lastDayOfMonth,
   parseISO,

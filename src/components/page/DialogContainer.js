@@ -48,7 +48,7 @@ const DialogContainer = forwardRef(
             alignItems={'center'}
             sx={{
               height: 56,
-              mt: 2,
+              mt: 5,
               p: 2,
               borderBottom: 1,
               borderColor: 'tennis.200',
