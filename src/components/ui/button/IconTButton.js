@@ -32,7 +32,13 @@ const IconTButton = ({
         justifyContent={justifyContent}
         sx={{ width: '100%' }}
       >
-        {icon}
+        <Stack
+          justifyContent={'center'}
+          alignItems={'center'}
+          sx={{ width: 24, height: 24 }}
+        >
+          {icon}
+        </Stack>
         <Typography sx={{ ...text12, ...labelSX }}>{label}</Typography>
       </Stack>
     </Button>

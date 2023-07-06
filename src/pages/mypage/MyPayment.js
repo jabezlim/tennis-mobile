@@ -242,7 +242,7 @@ const MyPayment = forwardRef((_, ref) => {
                         </Typography>
                       </Stack>
                     )}
-                    {/* <MoreVertIcon color='grey' /> */}
+                    {/* <MoreVertIcon  /> */}
                   </Stack>
                   <Stack
                     direction={'row'}

@@ -22,6 +22,7 @@ import { Terms } from 'components/page/auth';
 import { path } from 'config/path';
 import { text11, text12, text18 } from 'config/styles';
 import { ArrowBackIcon, CheckIcon, ChevronRightIcon } from 'config/icons';
+import { ICON_COLOR_CSS } from 'config/constants';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -159,15 +160,24 @@ const Register = () => {
               />
               <Stack direction={'row'} sx={{ color: 'error.main' }}>
                 <CheckIcon
-                  color='red'
-                  sx={{ width: 9.96, height: 7.52, mt: 0.2 }}
+                  sx={{
+                    width: 9.96,
+                    height: 7.52,
+                    mt: 0.2,
+                    filter: ICON_COLOR_CSS.red,
+                  }}
                 />
                 <Typography color={'error'} sx={{ ml: 0.5, ...text11 }}>
                   숫자로만 구성
                 </Typography>
                 <CheckIcon
-                  color='red'
-                  sx={{ width: 9.96, height: 7.52, mt: 0.2, ml: 1.5 }}
+                  sx={{
+                    width: 9.96,
+                    height: 7.52,
+                    mt: 0.2,
+                    ml: 1.5,
+                    filter: ICON_COLOR_CSS.red,
+                  }}
                 />
                 <Typography color={'error'} sx={{ ml: 0.5, ...text11 }}>
                   6자 이상

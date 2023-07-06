@@ -6,12 +6,18 @@ import { Divider, Stack, Typography } from '@mui/material';
 // import { MEMBER_TIMES_QUERY } from 'graphql/query';
 // components
 import { DialogContainer, GreyBox } from 'components/page';
-import { IconTButton, LogoutModal, TButton } from 'components/ui';
+import {
+  AccountOffModal,
+  IconTButton,
+  LogoutModal,
+  TButton,
+} from 'components/ui';
 // helpers
 import { getAuthUser } from 'helpers/storage';
 // config
 import { text12, text14, text15, text16 } from 'config/styles';
 import {
+  AccountOffIcon,
   // ChevronRightIcon,
   CreditCardIcon,
   EventAvailableIcon,
@@ -38,6 +44,8 @@ const MyPage = forwardRef((_, ref) => {
   const videoRef = useRef();
   const paymentRef = useRef();
   const logoutRef = useRef();
+  const accountOffRef = useRef();
+
   // data
   // const [point, setPoint] = useState(0);
 
@@ -68,6 +76,7 @@ const MyPage = forwardRef((_, ref) => {
     else if (path === 'video') videoRef.current.open();
     else if (path === 'payment') paymentRef.current.open();
     else if (path === 'logout') logoutRef.current.open();
+    else if (path === 'account_off') accountOffRef.current.open();
   };
 
   return (
@@ -161,7 +170,7 @@ const MyPage = forwardRef((_, ref) => {
             color='white'
             direction='row'
             justifyContent='flex-start'
-            icon={<CreditCardIcon color='grey' />}
+            icon={<CreditCardIcon />}
             sx={{ height: 60 }}
             labelSX={text14}
             onClick={() => handleNavigate('payment')}
@@ -172,10 +181,21 @@ const MyPage = forwardRef((_, ref) => {
             color='white'
             direction='row'
             justifyContent='flex-start'
-            icon={<LogoutIcon color='grey' />}
+            icon={<LogoutIcon />}
             sx={{ height: 60 }}
             labelSX={text14}
             onClick={() => handleNavigate('logout')}
+          />
+          <Divider sx={{ borderColor: 'grey.200', mx: -2 }} />
+          <IconTButton
+            label='계정 삭제'
+            color='white'
+            direction='row'
+            justifyContent='flex-start'
+            icon={<AccountOffIcon />}
+            sx={{ height: 60 }}
+            labelSX={text14}
+            onClick={() => handleNavigate('account_off')}
           />
           <Divider sx={{ borderColor: 'grey.200', mx: -2 }} />
         </Stack>
@@ -190,6 +210,8 @@ const MyPage = forwardRef((_, ref) => {
       <MyPayment ref={paymentRef} />
       {/* Logout */}
       <LogoutModal ref={logoutRef} />
+      {/* Remove Account */}
+      <AccountOffModal ref={accountOffRef} />
     </>
   );
 });

@@ -123,3 +123,13 @@ export const BOOKING_TYPE = {
   machine: '스크린 로봇, 코트',
   lesson: '레슨',
 };
+
+export const ICON_COLOR_CSS = {
+  default:
+    'invert(47%) sepia(14%) saturate(2106%) hue-rotate(57deg) brightness(93%) contrast(83%)',
+  black:
+    'invert(0%) sepia(13%) saturate(7439%) hue-rotate(76deg) brightness(96%) contrast(96%)',
+  white:
+    ' invert(100%) sepia(0%) saturate(0%) hue-rotate(126deg) brightness(104%) contrast(102%)',
+  red: 'invert(20%) sepia(89%) saturate(5778%) hue-rotate(355deg) brightness(99%) contrast(122%)',
+};

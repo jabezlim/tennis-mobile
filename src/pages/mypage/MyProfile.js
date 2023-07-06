@@ -13,6 +13,7 @@ import { MessageAlert } from 'components/ui/snackbar';
 // config
 import { text11 } from 'config/styles';
 import { CheckIcon } from 'config/icons';
+import { ICON_COLOR_CSS } from 'config/constants';
 
 const MyProfile = forwardRef((_, ref) => {
   const nameRef = useRef();
@@ -108,15 +109,24 @@ const MyProfile = forwardRef((_, ref) => {
           />
           <Stack direction={'row'} sx={{ color: 'error.main' }}>
             <CheckIcon
-              color='red'
-              sx={{ width: 9.96, height: 7.52, mt: 0.2 }}
+              sx={{
+                width: 9.96,
+                height: 7.52,
+                mt: 0.2,
+                filter: ICON_COLOR_CSS.red,
+              }}
             />
             <Typography color={'error'} sx={{ ml: 0.5, ...text11 }}>
               숫자로만 구성
             </Typography>
             <CheckIcon
-              color='red'
-              sx={{ width: 9.96, height: 7.52, mt: 0.2, ml: 1.5 }}
+              sx={{
+                width: 9.96,
+                height: 7.52,
+                mt: 0.2,
+                ml: 1.5,
+                filter: ICON_COLOR_CSS.red,
+              }}
             />
             <Typography color={'error'} sx={{ ml: 0.5, ...text11 }}>
               6자 이상

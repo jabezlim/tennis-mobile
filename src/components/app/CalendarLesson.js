@@ -68,13 +68,11 @@ const CalendarLesson = ({ lesson, booked, selected, handleDate }) => {
     <Stack spacing={1}>
       <Stack direction={'row'} alignItems={'center'} spacing={1.5}>
         <ChevronLeftIcon
-          color='grey'
           sx={{ width: 7.4, height: 12 }}
           onClick={() => handleIconClick('prev')}
         />
         <Typography sx={text20B}>{`${year}.${month}`}</Typography>
         <ChevronRightIcon
-          color='grey'
           sx={{ width: 7.4, height: 12 }}
           onClick={() => handleIconClick('next')}
         />

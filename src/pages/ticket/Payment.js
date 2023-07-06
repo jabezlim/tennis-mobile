@@ -221,7 +221,6 @@ const Payment = forwardRef(({ item }, ref) => {
         <AccordionSummary
           expandIcon={
             <ChevronDownIcon
-              color='grey'
               sx={{ width: 7.4, height: 12 }}
               onClick={handleAccordion}
             />

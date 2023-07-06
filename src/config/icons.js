@@ -1,12 +1,17 @@
 import { Box } from '@mui/material';
 import { path } from './path';
+import { ICON_COLOR_CSS } from './constants';
 
 const IconBox = ({ icon, sx, onClick }) => {
   return (
     <Box
       component='img'
       src={`${path.basename}/images/icon/${icon}.svg`}
-      sx={{ cursor: onClick ? 'pointer' : 'default', ...sx }}
+      sx={{
+        cursor: onClick ? 'pointer' : 'default',
+        filter: ICON_COLOR_CSS.default,
+        ...sx,
+      }}
       onClick={onClick}
     />
   );
@@ -39,51 +44,55 @@ export const PersonIcon = ({ sx = {}, onClick }) => {
     />
   );
 };
-export const LogoutIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'logout' : `logout_${color}`;
+export const AccountOffIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='account_circle_off'
+      sx={{ width: 21.33, height: 21.3, ...sx }}
+      onClick={onClick}
+    />
+  );
+};
+export const LogoutIcon = ({ sx = {}, onClick }) => {
+  return (
+    <IconBox
+      icon='logout'
       sx={{ width: 18, height: 18, ...sx }}
       onClick={onClick}
     />
   );
 };
-export const CloseIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'close' : `close_${color}`;
+export const CloseIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='close'
       sx={{ width: 14, height: 14, ...sx }}
       onClick={onClick}
     />
   );
 };
-export const CreditCardIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'credit_card' : `credit_card_${color}`;
+export const CreditCardIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='credit_card'
       sx={{ width: 20, height: 16, ...sx }}
       onClick={onClick}
     />
   );
 };
-export const CheckIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'chekc' : `check_${color}`;
+export const CheckIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='check'
       sx={{ width: 16.3, height: 12.02, ...sx }}
       onClick={onClick}
     />
   );
 };
-export const CheckCircleIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'check_circle' : `check_circle_${color}`;
+export const CheckCircleIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='check_circle'
       sx={{ width: 20, height: 20, ...sx }}
       onClick={onClick}
     />
@@ -98,72 +107,64 @@ export const ArrowBackIcon = ({ sx = {}, onClick }) => {
     />
   );
 };
-export const ChevronLeftIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'arrow_back_ios' : `arrow_back_ios_${color}`;
+export const ChevronLeftIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='arrow_back_ios'
       sx={{ width: 11.77, height: 20, ...sx }}
       onClick={onClick}
     />
   );
 };
-export const ChevronRightIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon =
-    color === '' ? 'arrow_forward_ios' : `arrow_forward_ios_${color}`;
+export const ChevronRightIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='arrow_forward_ios'
       sx={{ width: 11.77, height: 20, ...sx }}
       onClick={onClick}
     />
   );
 };
-export const ChevronUpIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'arrow_up_ios' : `arrow_up_ios_${color}`;
+export const ChevronUpIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='arrow_up_ios'
       sx={{ width: 20, height: 11.77, ...sx }}
       onClick={onClick}
     />
   );
 };
-export const ChevronDownIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'arrow_down_ios' : `arrow_down_ios_${color}`;
+export const ChevronDownIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='arrow_down_ios'
       sx={{ width: 20, height: 11.77, ...sx }}
       onClick={onClick}
     />
   );
 };
-export const EditIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'edit' : `edit_${color}`;
+export const EditIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='edit'
       sx={{ width: 16.95, height: 16.93, ...sx }}
       onClick={onClick}
     />
   );
 };
-export const CalendarMonthIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'calendar_month' : `calendar_month_${color}`;
+export const CalendarMonthIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='calendar_month'
       sx={{ width: 18, height: 20, ...sx }}
       onClick={onClick}
     />
   );
 };
-export const MoreVertIcon = ({ color = '', sx = {}, onClick }) => {
-  const icon = color === '' ? 'more_vert' : `more_vert_${color}`;
+export const MoreVertIcon = ({ sx = {}, onClick }) => {
   return (
     <IconBox
-      icon={icon}
+      icon='more_vert'
       sx={{ width: 4, height: 16, ...sx }}
       onClick={onClick}
     />

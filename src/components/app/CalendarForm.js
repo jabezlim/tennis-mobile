@@ -60,7 +60,7 @@ const CalendarForm = ({ label, handleDate }) => {
         }}
         onClick={handleClick}
       >
-        <CalendarMonthIcon color='grey' sx={{ width: 15, height: 16.67 }} />
+        <CalendarMonthIcon sx={{ width: 15, height: 16.67 }} />
         <Typography sx={{ ...text14, width: '100%' }}>
           {date} ({day})
         </Typography>

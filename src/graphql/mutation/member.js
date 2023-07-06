@@ -45,3 +45,14 @@ export const MEMBER_CONTACT_UPDATE_QUERY = gql`
     }
   }
 `;
+
+export const REMOVE_MEMBER_QUERY = gql`
+  mutation RemoveMember($storeId: ID!, $memberId: ID!) {
+    currentStoreId @client @export(as: "storeId")
+    currentMemberId @client @export(as: "memberId")
+    clt_remove_member(store_id: $storeId, member_id: $memberId) {
+      status
+      message
+    }
+  }
+`;
