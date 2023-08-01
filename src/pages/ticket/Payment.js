@@ -236,7 +236,17 @@ const Payment = forwardRef(({ item }, ref) => {
             alignItems={'center'}
             onClick={handleChange}
           >
-            <Checkbox checked={checked} color='black' sx={{ p: 0 }} />
+            <Checkbox
+              checked={checked}
+              color='black'
+              sx={{
+                p: 0,
+                color: 'tennis.main',
+                '&.Mui-checked': {
+                  color: 'tennis.main',
+                },
+              }}
+            />
             <Typography sx={text14}>주문내용 확인 및 결제 동의</Typography>
           </Stack>
         </AccordionSummary>

@@ -6,6 +6,9 @@ export const textFieldSX = {
   '& .Mui-error fieldset': {
     borderWidth: 2,
   },
+  '& .MuiOutlinedInput-root.Mui-focused fieldset': {
+    borderColor: 'tennis.main',
+  },
 };
 export const textFieldInputProps = {
   sx: {
@@ -32,6 +35,9 @@ export const selectSX = {
   '& fieldset': {
     border: 0,
     borderRadius: 0,
+  },
+  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    borderColor: 'tennis.main',
   },
 };
 export const selectMenuPaperSX = {

@@ -123,7 +123,14 @@ const Login = () => {
                   color='black'
                   checked={checked}
                   onChange={(event) => setChecked(event.target.checked)}
-                  sx={{ pr: 0.5, py: 0 }}
+                  sx={{
+                    pr: 0.5,
+                    py: 0,
+                    color: 'tennis.main',
+                    '&.Mui-checked': {
+                      color: 'tennis.main',
+                    },
+                  }}
                 />
               }
               label='로그인 상태 유지'

@@ -194,7 +194,14 @@ const Register = () => {
                     color='black'
                     checked={checked}
                     onChange={(event) => setChecked(event.target.checked)}
-                    sx={{ pr: 0.5, py: 0 }}
+                    sx={{
+                      pr: 0.5,
+                      py: 0,
+                      color: 'tennis.main',
+                      '&.Mui-checked': {
+                        color: 'tennis.main',
+                      },
+                    }}
                   />
                 }
                 label='개인정보 수집 동의'

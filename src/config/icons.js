@@ -2,14 +2,14 @@ import { Box } from '@mui/material';
 import { path } from './path';
 import { ICON_COLOR_CSS } from './constants';
 
-const IconBox = ({ icon, sx, onClick }) => {
+const IconBox = ({ icon, sx, onClick, filter }) => {
   return (
     <Box
       component='img'
       src={`${path.basename}/images/icon/${icon}.svg`}
       sx={{
         cursor: onClick ? 'pointer' : 'default',
-        filter: ICON_COLOR_CSS.default,
+        filter: filter ? filter : ICON_COLOR_CSS.default,
         ...sx,
       }}
       onClick={onClick}
@@ -113,6 +113,7 @@ export const ChevronLeftIcon = ({ sx = {}, onClick }) => {
       icon='arrow_back_ios'
       sx={{ width: 11.77, height: 20, ...sx }}
       onClick={onClick}
+      filter={ICON_COLOR_CSS.black}
     />
   );
 };
@@ -122,6 +123,7 @@ export const ChevronRightIcon = ({ sx = {}, onClick }) => {
       icon='arrow_forward_ios'
       sx={{ width: 11.77, height: 20, ...sx }}
       onClick={onClick}
+      filter={ICON_COLOR_CSS.black}
     />
   );
 };
@@ -131,6 +133,7 @@ export const ChevronUpIcon = ({ sx = {}, onClick }) => {
       icon='arrow_up_ios'
       sx={{ width: 20, height: 11.77, ...sx }}
       onClick={onClick}
+      filter={ICON_COLOR_CSS.black}
     />
   );
 };
@@ -140,6 +143,7 @@ export const ChevronDownIcon = ({ sx = {}, onClick }) => {
       icon='arrow_down_ios'
       sx={{ width: 20, height: 11.77, ...sx }}
       onClick={onClick}
+      filter={ICON_COLOR_CSS.black}
     />
   );
 };

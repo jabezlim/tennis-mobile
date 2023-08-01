@@ -33,6 +33,7 @@ const CodeInfo = forwardRef((_, ref) => {
             <QRCode
               value={getAuthBarcode()}
               style={{ height: '100%', maxWidth: '100%', width: '100%' }}
+              fgColor='#366122'
               viewBox={`0 0 256 256`}
             />
           </Box>

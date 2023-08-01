@@ -46,6 +46,7 @@ const CalendarWeek = ({ ymd, selected, handleCalendar }) => {
                 width: '100%',
                 py: 1,
                 border: selected && week.date === selected.date ? 1 : 0,
+                borderColor: 'tennis.main',
               }}
               onClick={() => handleDate(week.date, week.day)}
             >

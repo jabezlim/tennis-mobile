@@ -107,6 +107,7 @@ const CalendarDate = ({ today, year, month, selected, dates, onClick }) => {
               lineHeight: '40px',
               textAlign: 'center',
               border: isSelected ? 1 : 0,
+              borderColor: 'tennis.main',
               color: disabled
                 ? 'grey.200'
                 : index === 0
