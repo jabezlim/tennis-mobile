@@ -42,7 +42,7 @@ export const fDateToDot = (date) => {
   return date.replaceAll('-', '.');
 };
 export const fHmsToHm = (time) => {
-  return time.substring(0, 5);
+  return time ? time.substring(0, 5) : '--:--';
 };
 
 // for ie

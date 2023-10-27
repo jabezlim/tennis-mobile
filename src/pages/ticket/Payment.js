@@ -171,13 +171,14 @@ const Payment = forwardRef(({ item }, ref) => {
         <Stack direction={'row'} spacing={1}>
           {isLesson && (
             <Typography sx={text14B}>
-              {item && convertDayCodeToText(item.lesson_day)}요일
+              {/* {item && convertDayCodeToText(item.lesson_day)}요일 */}
+              {item && item.name }
             </Typography>
           )}
           <Typography sx={text14B}>
             {item && `${item.period}${PERIOD_TYPE[item.period_type]}`}
           </Typography>
-          {isLesson && (
+          {/* {isLesson && (
             <Stack direction={'row'} spacing={0.5}>
               <Typography sx={text14B}>{item && item.time}분</Typography>
               <Typography sx={text14}>
@@ -185,9 +186,9 @@ const Payment = forwardRef(({ item }, ref) => {
                 {item && fHmsToHm(item.lesson_end_time)}
               </Typography>
             </Stack>
-          )}
+          )} */}
         </Stack>
-        {isLesson && (
+        {/* {isLesson && (
           <Stack direction={'row'} spacing={0.5}>
             <Typography sx={text14B}>레슨 날짜</Typography>
             <Typography sx={text14}>
@@ -197,7 +198,7 @@ const Payment = forwardRef(({ item }, ref) => {
                 )}`}
             </Typography>
           </Stack>
-        )}
+        )} */}
       </Stack>
       <GreyBox sx={{ height: 8 }} />
       <Stack spacing={2} sx={{ py: 2 }}>

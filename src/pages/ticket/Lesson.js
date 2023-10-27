@@ -18,10 +18,13 @@ import { fNumber } from 'utils/formatNumber';
 import { convertDayCodeToText } from 'utils/util';
 import { fHmsToHm } from 'utils/formatDateTime';
 // pages
-import LessonCalendar from './LessonCalendar';
+//import LessonCalendar from './LessonCalendar';
+// pages
+import Payment from './Payment';
 
 const Lesson = () => {
-  const calendarRef = useRef();
+  //const calendarRef = useRef();
+  const paymentRef = useRef();
   // data
   const [items, setItems] = useState();
   const [item, setItem] = useState();
@@ -45,13 +48,15 @@ const Lesson = () => {
 
   const handleClick = (item) => {
     setItem(item);
-    handleNavigate('calendar');
+    //handleNavigate('calendar');
+    handleNavigate('payment');
   };
   // const handleDate = (date) => {
   //   console.log('handleDate', date);
   // };
   const handleNavigate = (path) => {
-    if (path === 'calendar') calendarRef.current.open();
+    //if (path === 'calendar') calendarRef.current.open();
+    if (path === 'payment') paymentRef.current.open();
   };
 
   return (
@@ -126,13 +131,13 @@ const Lesson = () => {
                     sx={{ mt: 2.5 }}
                   >
                     <Stack spacing={1}>
-                      <Stack direction={'row'} spacing={0.5}>
+                      {/* <Stack direction={'row'} spacing={0.5}>
                         <Typography sx={text14B}>{item.time}분</Typography>
                         <Typography sx={text14}>
                           {fHmsToHm(item.lesson_start_time)}-
                           {fHmsToHm(item.lesson_end_time)}
                         </Typography>
-                      </Stack>
+                      </Stack> */}
                       <Stack direction={'row'} spacing={0.5}>
                         <Typography sx={text14B}>
                           {`${item.period}${PERIOD_TYPE[item.period_type]}`}
@@ -153,7 +158,8 @@ const Lesson = () => {
             );
           })}
       </Stack>
-      <LessonCalendar ref={calendarRef} lesson={item} />
+      {/* <LessonCalendar ref={calendarRef} lesson={item} /> */}
+      <Payment ref={paymentRef} item={item} />
     </PageContainer>
   );
 };
