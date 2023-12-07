@@ -20,10 +20,10 @@ export const requestPayment = async (item) => {
       phone: getAuthUser().contact,
     },
     extra: {
-      // open_type: 'iframe', //'popup', //'iframe',
+      open_type: 'popup', //'popup', //'iframe',
       card_quota: '0,2,3',
       // test_deposit: true,
-      // show_close_button: true,
+      show_close_button: true,
     },
   };
 

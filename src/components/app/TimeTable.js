@@ -184,7 +184,7 @@ const TimeTableHour = ({
   if (today && time) {
     if (today.date === time.date && today.hour > time.hour) return <></>;
     const isSameHour = today.date === time.date && today.hour === time.hour;
-    const disableMinute = Number(today.minute) + 10;
+    const disableMinute = Number(today.minute) + 1;
     return (
       <Stack direction={'row'} spacing={1}>
         {minutes &&
