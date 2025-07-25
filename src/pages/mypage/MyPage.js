@@ -188,7 +188,7 @@ const MyPage = forwardRef((_, ref) => {
           />
           <Divider sx={{ borderColor: 'grey.200', mx: -2 }} />
           <IconTButton
-            label='계정 삭제'
+            label='회원 탈퇴'
             color='white'
             direction='row'
             justifyContent='flex-start'

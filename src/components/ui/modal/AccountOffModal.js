@@ -60,7 +60,7 @@ const AccountOffModal = forwardRef((_, ref) => {
             pt: 6,
           }}
         >
-          계정을 삭제하시겠습니까?
+          회원을 탈퇴하시겠습니까?
         </Typography>
         <Typography
           sx={{ ...text12, textAlign: 'center', color: 'grey.800', mt: 1 }}
@@ -80,7 +80,7 @@ const AccountOffModal = forwardRef((_, ref) => {
         </Typography>
         <Stack direction={'row'} spacing={1} sx={{ p: 2 }}>
           <TButton label='취소' color='grey' onClick={() => setOpen(false)} />
-          <TButton label='계정 삭제' color='error' onClick={handleAccount} />
+          <TButton label='회원 탈' color='error' onClick={handleAccount} />
         </Stack>
       </Stack>
     </Modal>

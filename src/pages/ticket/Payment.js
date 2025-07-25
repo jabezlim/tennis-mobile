@@ -92,25 +92,48 @@ const Payment = forwardRef(({ item }, ref) => {
       const response = await requestPayment(item);
       if (response.status) {
         setOpenDialog(true);
+        //console.log(response);
         const data = response.data;
-        const cardData = data.card_data;
-        const card = {
-          termid: cardData.tid,
-          cardtype: cardData.card_company,
-          cardno: `${cardData.card_no.substring(0, 6)}**********`,
-          cardQuota: cardData.card_quota,
-          appno: cardData.card_approve_no,
-          saledate: format(new Date(), 'yyyyMMdd'),
-          saletime: format(new Date(), 'HHmmss'),
-          paytype: 1,
-          installment: 0,
-          cardReceiptUrl: replace(cardData.receipt_url, /\\/g, ''),
-          receiptId: data.receipt_id,
-          receiptUrl: data.receipt_url,
-          receiptStatus: data.status,
-          receiptPrice: data.price,
-        };
-        handlePay(card);
+        if (data.card_data) {
+          const cardData = data.card_data;
+          const card = {
+            termid: cardData.tid,
+            cardtype: cardData.card_company,
+            cardno: `${cardData.card_no.substring(0, 6)}**********`,
+            cardQuota: cardData.card_quota,
+            appno: cardData.card_approve_no,
+            saledate: format(new Date(), 'yyyyMMdd'),
+            saletime: format(new Date(), 'HHmmss'),
+            paytype: 1,
+            installment: 0,
+            cardReceiptUrl: replace(cardData.receipt_url, /\\/g, ''),
+            receiptId: data.receipt_id,
+            receiptUrl: data.receipt_url,
+            receiptStatus: data.status,
+            receiptPrice: data.price,
+          };
+          handlePay(card);
+        }
+        else {
+          console.log(data);
+          const card = {
+            termid: data.kakao_money_data ? data.kakao_money_data.tid : '0000',
+            cardtype: data.method_origin,
+            cardno: '',
+            cardQuota: '0',
+            appno: data.order_id,
+            saledate: format(new Date(), 'yyyyMMdd'),
+            saletime: format(new Date(), 'HHmmss'),
+            paytype: 1,
+            installment: 0,
+            cardReceiptUrl: '',
+            receiptId: data.receipt_id,
+            receiptUrl: data.receipt_url,
+            receiptStatus: data.status,
+            receiptPrice: data.price,
+          };
+          handlePay(card);
+        }
       } else {
         handleAlert({ open: true, message: response.message, error: true });
       }
