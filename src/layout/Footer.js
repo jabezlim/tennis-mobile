@@ -29,9 +29,6 @@ const Footer = ({ isDialog = false }) => {
           if (newValue === pathname && isDialog) navigate(0);
         }}
         sx={{
-          //border: '1px solid',
-          height: 100,
-          pb: 5,
           '& span.Mui-selected': {
             fontWeight: 700,
             fontSize: '0.75rem',

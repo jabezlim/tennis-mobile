@@ -125,7 +125,7 @@ const TicketModal = ({ item, onClick }) => {
       spacing={2}
       sx={{
         position: 'fixed',
-        bottom: 100,
+        bottom: 56,
         left: 0,
         right: 0,
         p: 2,
