@@ -80,7 +80,7 @@ const AccountOffModal = forwardRef((_, ref) => {
         </Typography>
         <Stack direction={'row'} spacing={1} sx={{ p: 2 }}>
           <TButton label='취소' color='grey' onClick={() => setOpen(false)} />
-          <TButton label='회원 탈' color='error' onClick={handleAccount} />
+          <TButton label='회원 탈퇴' color='error' onClick={handleAccount} />
         </Stack>
       </Stack>
     </Modal>

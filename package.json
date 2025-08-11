@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "set PORT=3000 && react-scripts start",
+    "start": "cross-env PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -59,6 +59,7 @@
   "devDependencies": {
     "@iconify/icons-eva": "^1.2.2",
     "@iconify/icons-fluent": "^1.2.4",
-    "@iconify/react": "^3.2.2"
+    "@iconify/react": "^3.2.2",
+    "cross-env": "^10.0.0"
   }
 }

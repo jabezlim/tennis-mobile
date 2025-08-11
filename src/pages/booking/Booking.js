@@ -555,7 +555,7 @@ const BookingModal = ({ times = [], period = 15, totalTime = 0, onClick }) => {
       spacing={2}
       sx={{
         position: 'fixed',
-        bottom: 56,
+        bottom: 90,
         left: 0,
         right: 0,
         p: 2,

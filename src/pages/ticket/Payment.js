@@ -324,6 +324,7 @@ const PaymentButton = ({ price, disabled, onClick }) => {
         right: 0,
         p: 2,
         mx: 0,
+        pb: 8,
       }}
     >
       <TButton
