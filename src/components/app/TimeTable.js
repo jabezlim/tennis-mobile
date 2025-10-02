@@ -21,6 +21,8 @@ const TimeTable = ({
   booked = [],
   bookings = [],
   handleTime,
+  start_store_time = 0,
+  end_store_time = 24,
 }) => {
   // data
   const [nextDate, setNextDate] = useState();
@@ -52,7 +54,7 @@ const TimeTable = ({
         date: format(addDays(parseISO(date.date), 1), DATE_FORMAT),
         day: (date.day + 1) % 7,
       });
-      if (date.date === today.date && Number(today.hour) > 11) {
+      if ((start_store_time>11) || (date.date === today.date && Number(today.hour) > 11)) {
         setIsShowAM(false);
       } else {
         setIsShowAM(true);
@@ -64,7 +66,7 @@ const TimeTable = ({
   useEffect(() => {
     if (nextDate) {
       const temp = { am: [], pm: [], next: [] };
-      for (let i = 0; i < 12; i++) {
+      for (let i = start_store_time; i < 12; i++) {
         // temp.am.push({ date: date.date, hour: padStart(i, 2, '0') });
         temp.am.push({
           date: date.date,
@@ -72,7 +74,7 @@ const TimeTable = ({
           day: DAY_OF_WEEK[date.day],
         });
       }
-      for (let i = 12; i < 24; i++) {
+      for (let i = start_store_time < 12 ? 12 : start_store_time; i < end_store_time; i++) {
         // temp.pm.push({ date: date.date, hour: padStart(i, 2, '0') });
         temp.pm.push({
           date: date.date,
@@ -80,7 +82,7 @@ const TimeTable = ({
           day: DAY_OF_WEEK[date.day],
         });
       }
-      if (NEXT_DATE_TIME_PERIOD > 0) {
+      if ((start_store_time == 0) && (NEXT_DATE_TIME_PERIOD > 0)) {
         for (let i = 0; i < NEXT_DATE_TIME_PERIOD; i++) {
           // temp.next.push({ date: nextDate.date, hour: padStart(i, 2, '0') });
           temp.next.push({
@@ -143,7 +145,7 @@ const TimeTable = ({
             />
           ))}
       </Stack>
-      {NEXT_DATE_TIME_PERIOD > 0 && (
+      {(start_store_time == 0) && (NEXT_DATE_TIME_PERIOD > 0) && (
         <Stack spacing={1}>
           <Stack direction={'row'} alignItems={'flex-end'} spacing={0.5}>
             <Typography sx={text14B}>AM</Typography>

@@ -3,6 +3,8 @@ import { Box, Typography } from '@mui/material';
 // config
 import { text12_21 } from 'config/styles';
 
+const STORENAME = "스포츠진흥원";
+
 const Terms = () => {
   return (
     <Box sx={{ px: 2 }}>
@@ -10,7 +12,7 @@ const Terms = () => {
         [개인 정보 수집 동의]
       </Typography>
       <Typography sx={text12_21}>
-        테니스 스쿼드에서는 고객의 서비스 이용을 위해 아래와 같은 최소한의
+        {STORENAME}에서는 고객의 서비스 이용을 위해 아래와 같은 최소한의
         개인정보를 수집하고 있습니다
       </Typography>
       <Typography sx={{ ...text12_21, fontWeight: 700, mt: 2 }}>
@@ -21,7 +23,7 @@ const Terms = () => {
         2. 개인정보의 수집 방법
       </Typography>
       <Typography sx={{ ...text12_21, pl: 2 }}>
-        테니스의 스쿼드는 다음과 같은 방법으로 개인정보를 수집합니다. 테니스
+        {STORENAME}는 다음과 같은 방법으로 개인정보를 수집합니다. 테니스
         스쿼드 페이지에서 고객 확인
       </Typography>
       <Typography sx={{ ...text12_21, fontWeight: 700, mt: 2 }}>
@@ -43,7 +45,7 @@ const Terms = () => {
         [개인 정보 제 3자 제공 안내]
       </Typography>
       <Typography sx={text12_21}>
-        테니스 스쿼드는 수집된 정보를 제3자에게 제공하지 않습니다.
+        {STORENAME}는 수집된 정보를 제3자에게 제공하지 않습니다.
       </Typography>
       <Typography sx={{ ...text12_21, mt: 4 }}>
         * 동의를 거부 할 수 있으며, 동의 거부시 제공되는 서비스를 이용할 수

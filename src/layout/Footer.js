@@ -60,12 +60,12 @@ const Footer = ({ isDialog = false }) => {
           value={path.urls.ticketMachine}
           onClick={() => navigate(path.urls.ticketMachine)}
         />
-        <BottomNavigationAction
+        {/* <BottomNavigationAction
           label='레슨 수강'
           icon={<LessonIcon />}
           value={path.urls.ticketLesson}
           onClick={() => navigate(path.urls.ticketLesson)}
-        />
+        /> */}
       </BottomNavigation>
     </Stack>
   );

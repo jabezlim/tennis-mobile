@@ -8,6 +8,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Typography
 } from '@mui/material';
 // graphql
 import { useQuery } from '@apollo/client';
@@ -63,44 +64,55 @@ const Store = ({
 
   return (
     <Box sx={{ width: '100%', ...sx }}>
-      <FormControl
-        fullWidth
-        color='black'
-        size={size}
-        error={required && !store}
-        disabled={disabled}
-      >
-        <InputLabel id='store-select-label' color='primary'>
-          지점명을 꼭 확인해 주세요{required && ' *'}
-        </InputLabel>
-        <Select
-          labelId='store-select-label'
-          id='store-select'
-          value={store}
-          label='지점명을 꼭 확인해 주세요'
-          onChange={handleChange}
-          // IconComponent={(props) => (
-          //   <ChevronDownIcon
-          //     {...props}
-          //     sx={{ width: 7.4, height: 12, mr: 2 }}
-          //   />
-          // )}
-          sx={selectSX}
-          MenuProps={{
-            PaperProps: { sx: selectMenuPaperSX },
+      { storeId && storeNames ? (
+        <Typography sx={{ 
+            fontWeight: 700,
+            fontSize: 20, 
+            textAlign: 'center' 
           }}
         >
-          {allitem && <MenuItem value='all-items'>모든 지점</MenuItem>}
-          {stores.map((store, index) => (
-            <MenuItem value={store.id} key={index}>
-              {store.name}
-            </MenuItem>
-          ))}
-        </Select>
-        {required && !store && (
-          <FormHelperText>지점를 선택해 주세요.</FormHelperText>
-        )}
-      </FormControl>
+          { storeNames[storeId].name }
+        </Typography>
+      ) : (
+        <FormControl
+          fullWidth
+          color='black'
+          size={size}
+          error={required && !store}
+          disabled={disabled}
+        >
+          <InputLabel id='store-select-label' color='primary'>
+            지점명을 꼭 확인해 주세요{required && ' *'}
+          </InputLabel>
+          <Select
+            labelId='store-select-label'
+            id='store-select'
+            value={store}
+            label='지점명을 꼭 확인해 주세요'
+            onChange={handleChange}
+            // IconComponent={(props) => (
+            //   <ChevronDownIcon
+            //     {...props}
+            //     sx={{ width: 7.4, height: 12, mr: 2 }}
+            //   />
+            // )}
+            sx={selectSX}
+            MenuProps={{
+              PaperProps: { sx: selectMenuPaperSX },
+            }}
+          >
+            {allitem && <MenuItem value='all-items'>모든 지점</MenuItem>}
+            {stores.map((store, index) => (
+              <MenuItem value={store.id} key={index}>
+                {store.name}
+              </MenuItem>
+            ))}
+          </Select>
+          {required && !store && (
+            <FormHelperText>지점를 선택해 주세요.</FormHelperText>
+          )}
+        </FormControl>
+      )}
     </Box>
   );
 };

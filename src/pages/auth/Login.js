@@ -22,7 +22,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { storeid } = useParams();
   // data
-  const [id, setId] = useState();
+  const [id, setId] = useState(0);
   const [name, setName] = useState();
   const [checked, setChecked] = useState(true);
   const [message, setMessage] = useState();
@@ -74,7 +74,7 @@ const Login = () => {
   };
 
   const handleRegister = () => {
-    const url = id ? `${path.urls.register}/${id}/${name}` : path.urls.register;
+    const url = id ? `${path.urls.register}/${id}` : path.urls.register;
     navigate(url);
   };
 

@@ -334,14 +334,20 @@ const Booking = () => {
 
   return (
     <PageContainer label='예약하기'>
-      <Calendar handleDate={handleSelectDate} />
+      <Stack spacing={2}>
+        <Typography sx={text15B}>코트 선택</Typography>
+        { storeData.id == 14 && (
+        <Box
+          component="img"
+          src={`${path.basename}/images/courtlayout.png`}
+          sx={{ width: '100%', height: 'auto' }}
+        />  )}
+        <Machine required handleMachine={handleChangeMachine} />
+      </Stack>
       <Box
         sx={{ borderBottom: 1, borderColor: 'grey.200', mx: -2, mt: 1, mb: 3 }}
       />
-      <Stack spacing={2}>
-        <Typography sx={text15B}>코트 선택</Typography>
-        <Machine required handleMachine={handleChangeMachine} />
-      </Stack>
+      <Calendar handleDate={handleSelectDate} />
       <Box sx={{ bgcolor: 'grey.200', height: 8, mx: -2, my: 3 }} />
       <Stack direction={'row'} justifyContent={'space-between'}>
         <Stack spacing={0.75}>
@@ -387,6 +393,7 @@ const Booking = () => {
         booked={booked}
         bookings={bookingTimes}
         handleTime={handleTime}
+        start_store_time={storeData.id == 14 ? 17 : 0}
       />
       <Box sx={{ height: 149 }} />
       {selectedTimes && (

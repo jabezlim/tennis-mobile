@@ -44,6 +44,7 @@ const Register = () => {
         setOpenCode(true);
       } else {
         setMessage(data.clt_register_confirm.message);
+        //setOpenCode(true);
       }
     },
     onError: (error) => console.log(error),
