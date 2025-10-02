@@ -88,6 +88,8 @@ const ConfirmCode = ({
     count === 0 ? null : 1000
   );
 
+  const { errors, touched, handleSubmit, setFieldValue, values } = formik;
+
   // useInterval(
   //   () => {
   //     setShowCount((prevData) => {
@@ -95,11 +97,27 @@ const ConfirmCode = ({
   //     });
   //   },
   //   showCount === 0 ? null : 1000
-  // );
+  // ); 420723
 
   const handleChange = (e) => {
     const { maxLength, value, id } = e.target;
     const code = Number(id.replace('code_', ''));
+
+    //console.log(value);
+    if (value.length > 1) {
+      const invalues = value.split('');   
+      let i = 0;
+      //console.log(invalues);   
+      for(i = 0; i < invalues.length; i++) {
+        setFieldValue(`phone_${i + 1}`, invalues[i]);
+      }
+
+      const nextSibling = document.querySelector(`input[id=code_${i+1}]`);
+      if (nextSibling !== null) {
+          nextSibling.focus();
+      }
+      return;
+    }
 
     setFieldValue(`phone_${code}`, value);
 
@@ -110,6 +128,23 @@ const ConfirmCode = ({
       }
     }
   };
+
+  const handleKeyDown = (e) => {
+    const { key, target } = e;
+    const code = Number(target.id.replace('code_', ''));
+    
+    if (key === 'Backspace') {
+      setFieldValue(`phone_${code}`, '');
+      if (code > 1) {
+        setFieldValue(`phone_${code - 1}`, '');
+        const prevSibling = document.querySelector(`input[id=code_${code - 1}]`);
+        if (prevSibling !== null) {
+          prevSibling.focus();          
+        }
+      } 
+    }
+  };
+
   const handleResendCode = () => {
     if (store && phone) {
       const variables = {
@@ -122,7 +157,7 @@ const ConfirmCode = ({
     }
   };
 
-  const { errors, touched, handleSubmit, setFieldValue } = formik;
+  
 
   return (
     <FormikProvider value={formik}>
@@ -159,6 +194,8 @@ const ConfirmCode = ({
                     touched[`phone_${number}`] && errors[`phone_${number}`]
                   )}
                   handleChange={handleChange}
+                  handleKeyDown={handleKeyDown}
+                  value={values[`phone_${number}`]} 
                 />
               ))}
             </Stack>
@@ -203,7 +240,7 @@ const ConfirmCode = ({
   );
 };
 
-const ConfirmText = ({ id, error = false, handleChange }) => {
+const ConfirmText = ({ id, error = false, handleChange, handleKeyDown, value }) => {
   return (
     <TextField
       fullWidth
@@ -223,7 +260,7 @@ const ConfirmText = ({ id, error = false, handleChange }) => {
         },
       }}
       inputProps={{
-        maxLength: 1,
+        //maxLength: 1,
         sx: {
           height: '1.215em',
           textAlign: 'center',
@@ -232,6 +269,8 @@ const ConfirmText = ({ id, error = false, handleChange }) => {
         },
       }}
       onChange={handleChange}
+      onKeyDown={handleKeyDown}
+      value={value}
       onFocus={(e) => e.target.select()}
     />
   );
