@@ -112,7 +112,7 @@ const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
             <CalendarWeek selected={selected} handleCalendar={handleCalendar} />
           </Box>
         </Slide>
-        <Fade in={!isMonth}>
+        {/* <Fade in={!isMonth}>
           <Box sx={{ display: isMonth ? 'none' : 'block' }}>
             <ChevronDownIcon
               sx={{ width: 12, height: 7.4 }}
@@ -139,7 +139,7 @@ const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
               onClick={() => handleToggleCalendar(false)}
             />
           </Box>
-        </Fade>
+        </Fade> */}
       </Stack>
     </Stack>
   );

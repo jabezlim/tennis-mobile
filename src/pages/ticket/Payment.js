@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 // graphql
 import { useMutation, useReactiveVar } from '@apollo/client';
-import { PAY_QUERY } from 'graphql/mutation';
+import { PAY_QUERY, BOOK_QUERY } from 'graphql/mutation';
 // components
 import { DialogContainer, GreyBox } from 'components/page';
 import { AlertModal, TButton } from 'components/ui';
@@ -61,7 +61,8 @@ const Payment = forwardRef(({ item }, ref) => {
         if (item.category_id === '1') {
           message = '레슨 수강이 완료되었습니다.';
         } else {
-          message = '정기권 구매가 완료되었습니다.';
+          //message = '정기권 구매가 완료되었습니다.';
+          message = '결제가 완료되었습니다.';
         }
         error = false;
       }
@@ -74,11 +75,44 @@ const Payment = forwardRef(({ item }, ref) => {
     onError: (error) => console.log(error),
   });
 
+  const [booking] = useMutation(BOOK_QUERY, {
+      onCompleted: (data) => {
+        if (data.clt_booking.status) {
+          navigate(path.urls.home);
+        } else {
+          //setMessage(data.clt_booking.message);
+          //setOpenAlert(true);
+          handleAlert({
+            open: true,
+            message: data.clt_booking.message,
+            error: true,
+          });
+        }
+      },
+      onError: (error) => console.log(error),
+    });
+
   useEffect(() => {
     if (!alert.open && isGoing) {
-      navigate(path.urls.home);
+      if (item.category_id === 3) {      
+        const variables = {
+          storeId: item.storeId,
+          machineId: item.machineId,
+          memberId: item.memberId,
+          barcode: item.barcode,
+          discount: item.discount,
+          times: item.times,
+          startDate: item.startDate,
+          startTime: item.startTime,
+          endDate: item.endDate,
+          endTime: item.endTime,
+          usedTime: item.usedTime,
+        };
+        booking({ variables });
+      } else {
+        navigate(path.urls.home);
+      }
     }
-    // eslint-disable-next-line
   }, [alert.open]);
 
   useEffect(() => {
@@ -88,6 +122,7 @@ const Payment = forwardRef(({ item }, ref) => {
   }, [item]);
 
   const handlePayment = async () => {
+    console.log('handlePayment item', item);
     if (gatAuthApp() && item) {
       const response = await requestPayment(item);
       if (response.status) {
@@ -150,9 +185,9 @@ const Payment = forwardRef(({ item }, ref) => {
       categoryId: item.category_id,
       category: CATEGORY_TYPE[item.category_id],
       programName: item.name,
-      period: item.period,
-      periodType: item.period_type,
-      price: item.price,
+      period: String(item.period),
+      periodType: String(item.period_type),
+      price: String(item.price),
       lessonType: item.lesson_type,
       ...paymentData,
     };

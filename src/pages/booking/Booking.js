@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { forEach, union } from 'lodash';
 import {
@@ -56,6 +56,7 @@ import {
   DAY_OF_WEEK_KO,
   NEXT_DATE_TIME_PERIOD,
   TIME_FORMAT_AM_PM,
+  PERIOD_TYPE,
 } from 'config/constants';
 import { CloseIcon } from 'config/icons';
 import { path } from 'config/path';
@@ -67,10 +68,12 @@ import {
   createMachineData,
 } from 'helpers/timeTable';
 import { getAuthBarcode, getAuthUser } from 'helpers/storage';
+import Payment from 'pages/ticket/Payment';
 
 const Booking = () => {
   const navigate = useNavigate();
   const storeData = useReactiveVar(storeDataVar);
+  const paymentRef = useRef();
   // data
   const [date, setDate] = useState();
   const [period] = useState(storeData.booking_time_period);
@@ -88,6 +91,8 @@ const Booking = () => {
   const [open, setOpen] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [message, setMessage] = useState();
+  const [item, setItem] = useState();
+  const [price, setPrice] = useState(3500);
   // graphql
   const [payment] = useMutation(BOOK_QUERY, {
     onCompleted: (data) => {
@@ -171,6 +176,7 @@ const Booking = () => {
   };
 
   useEffect(() => {
+    //console.log(storeData);
     if (machine && blockList) {
       setBlocked(blockList[machine.id]);
     }
@@ -202,11 +208,24 @@ const Booking = () => {
   useEffect(() => {
     if (bookingTimes.length > 0) {
       const selectedTime = bookingTimes.length * period;
-      if (selectedTime > memberTime) {
-        setMessage('선택하신 예약 시간이 사용 가능 시간을 초과하였습니다.');
-        setOpenAlert(true);
-        setTotalTime(0);
-      } else setTotalTime(selectedTime);
+      //if (selectedTime > memberTime) {
+      //  setMessage('선택하신 예약 시간이 사용 가능 시간을 초과하였습니다.');
+      //  setOpenAlert(true);
+      //  setTotalTime(0);
+      //} else 
+      setTotalTime(selectedTime);
+      console.log('selectedTime', selectedTime);
+      setItem(
+        { 
+          id: 170, 
+          name : machine ? machine.name : '코트이용권',
+          period: selectedTime / 60, 
+          period_type: 2, 
+          price : selectedTime / 60 * price,
+          category_id: 3,
+          menu_type: 1,
+        }
+      );
     }
     // eslint-disable-next-line
   }, [bookingTimes]);
@@ -214,6 +233,7 @@ const Booking = () => {
   const initBookings = () => {
     setSelectedTimes([]);
     setBookingTimes([]);
+    setItem();
   };
   const handleSelectDate = (date) => {
     initBookings();
@@ -234,8 +254,10 @@ const Booking = () => {
     }
     getMachineBooked({ variables });
   };
-  const handleChangeMachine = (id, name) => {
-    setMachine({ id, name });
+  const handleChangeMachine = (id, name, machine_no) => {
+    const mprice = machine_no == '' ? 3500 : Number(machine_no);
+    setMachine({ id, name, mprice });
+    setPrice( mprice );
     initBookings();
   };
   const handleTime = (time) => {
@@ -285,6 +307,7 @@ const Booking = () => {
         machine: machine,
         bookings: bookingTimes,
       };
+      console.log('booking:', temp);
       setBooking(temp);
       setOpen(true);
       // setSelectedTimes([]);
@@ -329,19 +352,41 @@ const Booking = () => {
       endTime: endDateTime[1],
       usedTime: booking.time.total - booking.time.discount,
     };
-    payment({ variables });
+    /*if (booking.time.member >= (booking.time.total - booking.time.discount)) {
+      payment({ variables });
+    } else {*/
+      setItem({
+        ...item,
+        storeId: storeData.id,
+        machineId: machine.id,
+        memberId: getAuthUser().id,
+        barcode: getAuthBarcode(),
+        discount: booking.time.discount,
+        times: JSON.stringify(times),
+        startDate: startDateTime[0],
+        startTime: startDateTime[1],
+        endDate: endDateTime[0],
+        endTime: endDateTime[1],
+        usedTime: booking.time.total - booking.time.discount,
+      })
+      paymentRef.current.open()
+    //}
+  };
+
+  const handleNavigate = (path) => {
+    if (path === 'payment') paymentRef.current.open();
   };
 
   return (
     <PageContainer label='예약하기'>
       <Stack spacing={2}>
         <Typography sx={text15B}>코트 선택</Typography>
-        { storeData.id == 14 && (
+        {/* { storeData.id == 14 && (
         <Box
           component="img"
           src={`${path.basename}/images/courtlayout.png`}
           sx={{ width: '100%', height: 'auto' }}
-        />  )}
+        />  )} */}
         <Machine required handleMachine={handleChangeMachine} />
       </Stack>
       <Box
@@ -352,9 +397,9 @@ const Booking = () => {
       <Stack direction={'row'} justifyContent={'space-between'}>
         <Stack spacing={0.75}>
           <Typography sx={text15B}>이용시간</Typography>
-          <Typography sx={{ ...text11, color: 'grey.800' }}>
+          {/* <Typography sx={{ ...text11, color: 'grey.800' }}>
             6시간 이상은 지점에 문의
-          </Typography>
+          </Typography> */}
         </Stack>
         <Stack direction={'row'} spacing={1}>
           <Stack direction={'row'} spacing={0.5}>
@@ -365,7 +410,7 @@ const Booking = () => {
             <Box sx={{ width: 8, height: 8, bgcolor: 'grey.200', mt: 0.1 }} />
             <Typography sx={text11}>예약불가</Typography>
           </Stack>
-          <Stack direction={'row'} spacing={0.5}>
+          {/* <Stack direction={'row'} spacing={0.5}>
             <Box
               sx={{
                 width: 8,
@@ -376,15 +421,17 @@ const Booking = () => {
               }}
             />
             <Typography sx={text11}>할인</Typography>
-          </Stack>
+          </Stack> */}
         </Stack>
       </Stack>
+      {/* { memberTime > 0 && (
       <Stack direction={'row'} spacing={0.3} sx={{ mt: 3, mb: 2 }}>
         <Typography sx={{ ...text14, fontWeight: 500 }}>
           잔여 이용권:
         </Typography>
         <Typography sx={text14B}>{memberTime}분</Typography>
       </Stack>
+      )} */}
       <TimeTable
         date={date}
         period={period}
@@ -393,10 +440,11 @@ const Booking = () => {
         booked={booked}
         bookings={bookingTimes}
         handleTime={handleTime}
-        start_store_time={storeData.id == 14 ? 17 : 0}
+        start_store_time={storeData.store_open}
+        end_store_time={storeData.store_close}
       />
       <Box sx={{ height: 149 }} />
-      {selectedTimes && (
+      { bookingTimes.length > 0 && (
         <BookingModal
           times={bookingTimes}
           totalTime={totalTime}
@@ -404,6 +452,9 @@ const Booking = () => {
           onClick={handleBooking}
         />
       )}
+      {/* {item && (
+        <TicketModal item={item} onClick={() => handleNavigate('payment')} />
+      )} */}
       <BookingDialog
         open={open}
         setOpen={setOpen}
@@ -418,6 +469,7 @@ const Booking = () => {
         align='center'
         onClick={() => setOpenAlert(false)}
       />
+      <Payment ref={paymentRef} item={item} />
     </PageContainer>
   );
 };
@@ -447,7 +499,7 @@ const BookingDialog = ({
       PaperProps={{
         sx: {
           position: 'absolute',
-          top: 'calc(150% - 352px)',
+          top: 'calc(150% - 300px)',
           left: '50%',
           transform: 'translate(-50%, -50%)',
         },
@@ -493,7 +545,7 @@ const BookingDialog = ({
                 bgcolor: 'common.white',
               }}
             >
-              {booking.time && booking.time.total}분
+              {booking.time && booking.time.total / 60} 시간
             </Typography>
             <Box sx={{ width: 44, borderTop: '1px dashed #CECECE' }} />
             <Typography sx={text14B}>
@@ -501,52 +553,61 @@ const BookingDialog = ({
             </Typography>
           </Stack>
         </Stack>
-        <Stack spacing={1} sx={{ mt: 1.5 }}>
-          {/* <Stack
-            direction={'row'}
-            alignItems={'flex-end'}
-            justifyContent={'space-between'}
-          >
-            <Typography sx={{ ...text14B, color: 'grey.800' }}>
-              일반예약
+        { /* booking.time && ((booking.time.member >= (booking.time.total - booking.time.discount)) && (
+          <>
+            <Stack spacing={1} sx={{ mt: 1.5 }}>
+              <Stack
+                direction={'row'}
+                alignItems={'flex-end'}
+                justifyContent={'space-between'}
+              >
+                <Typography sx={text14B}>시설 이용권 사용</Typography>
+                <Typography sx={text18B}>
+                  {booking.time && booking.time.total - booking.time.discount}분
+                  차감
+                </Typography>
+              </Stack>
+            </Stack>
+            <Typography
+              sx={{
+                ...text11,
+                color: 'error.main',
+                textAlign: 'right',
+                my: 0.5,
+              }}
+            >
+              차감 후 잔여 시간{' '}
+              {booking.time &&
+                booking.time.member - (booking.time.total - booking.time.discount)}
+              분
             </Typography>
-            <Typography sx={{ ...text18B, color: 'grey.800' }}>
-              50,000원
-            </Typography>
-          </Stack> */}
-          <Stack
-            direction={'row'}
-            alignItems={'flex-end'}
-            justifyContent={'space-between'}
-          >
-            <Typography sx={text14B}>시설 이용권 사용</Typography>
-            <Typography sx={text18B}>
-              {booking.time && booking.time.total - booking.time.discount}분
-              차감
-            </Typography>
-          </Stack>
-        </Stack>
-        <Typography
-          sx={{
-            ...text11,
-            color: 'error.main',
-            textAlign: 'right',
-            mt: 0.5,
-          }}
-        >
-          차감 후 잔여 시간{' '}
-          {booking.time &&
-            booking.time.member - (booking.time.total - booking.time.discount)}
-          분
-        </Typography>
-        <Stack direction={'row'} spacing={0.3} sx={{ mt: 3, mb: 2 }}>
-          <Typography sx={{ ...text11B, color: 'grey.800' }}>
-            *취소 및 환불 규정:
-          </Typography>
-          <Typography sx={{ ...text11, color: 'grey.800' }}>
-            예약 시작 기준 6시간 전 - 전액 환불
-          </Typography>
-        </Stack>
+          </>
+        )  */}
+         { booking.machine && ( 
+          <>
+            <Stack spacing={1} sx={{ mt: 1.5 }}>
+              <Stack
+                direction={'row'}
+                alignItems={'flex-end'}
+                justifyContent={'space-between'}
+              >
+                <Typography sx={text14B}>결제금액</Typography>
+                <Typography sx={text18B}>                      
+                  { booking.machine.mprice * ((booking.time.total - booking.time.discount) / 60) } 원
+                  &nbsp;( {(booking.time.total - booking.time.discount)  / 60 } 시간 )         
+                </Typography>
+              </Stack>
+            </Stack>
+            <Stack direction={'row'} spacing={0.3} sx={{ mt: 3, mb: 2 }}>
+              <Typography sx={{ ...text11B, color: 'grey.800' }}>
+                *취소 및 환불 규정:
+              </Typography>
+              <Typography sx={{ ...text11, color: 'grey.800' }}>
+                예약 시작 기준 6시간 전 - 전액 환불
+              </Typography>
+            </Stack>
+          </>
+        )}
         <TButton label='결제하기' onClick={onClick} />
       </DialogContent>
     </Dialog>
@@ -594,6 +655,28 @@ const BookingModal = ({ times = [], period = 15, totalTime = 0, onClick }) => {
         onClick={onClick}
       />
     </GreyBox>
+  );
+};
+
+const TicketModal = ({ item, onClick }) => {
+  return (
+    <Stack
+      spacing={2}
+      sx={{
+        position: 'fixed',
+        bottom: 56,
+        left: 0,
+        right: 0,
+        p: 2,
+        bgcolor: 'grey.100',
+      }}
+    >
+      <Typography sx={{ ...text14, textAlign: 'center' }}>
+        {item.period}
+        {PERIOD_TYPE[item.period_type]} {item.price}원
+      </Typography>
+      <TButton label='구매 하기' onClick={onClick} />
+    </Stack>
   );
 };
 

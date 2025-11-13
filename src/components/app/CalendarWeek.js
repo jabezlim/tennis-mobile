@@ -74,7 +74,7 @@ const CalendarWeek = ({ ymd, selected, handleCalendar }) => {
 const createWeekCalendarDate = (ymd, date) => {
   const day = getDay(ymd);
   const dates = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 3; i++) {
     dates.push({ date: String(date + i).padStart(2, '0'), day: (day + i) % 7 });
   }
   return dates;

@@ -124,7 +124,7 @@ const Home = () => {
           alignItems={'center'}
           sx={{ height: 32, bgcolor: 'tennis.200', px: 2 }}
         >
-          <Typography sx={text14}>회원 코드</Typography>
+          <Typography sx={text14}>예약자 코드</Typography>
           <Typography sx={text14}>{/* 플레이중 */}</Typography>
         </Stack>
         <GreyBox direction={'row'} spacing={2} sx={{ p: 2, mx: 0 }}>
@@ -148,7 +148,7 @@ const Home = () => {
         </GreyBox>
         {/* <Stack direction={'row'} spacing={1} sx={{ mt: 1 }}>
           <TButton
-            label='회원정보 수정'
+            label='예약자정보 수정'
             color='grey'
             onClick={() => handleNavigate('profile')}
           />
@@ -156,7 +156,7 @@ const Home = () => {
         </Stack> */}
         <GreyBox spacing={3} sx={{ mt: 3, px: 2, pt: 3, pb: 2 }}>
           <Stack spacing={1}>
-            <Stack direction={'row'} justifyContent={'space-between'}>
+            {/* <Stack direction={'row'} justifyContent={'space-between'}>
               <Typography sx={text16B}>잔여 이용권</Typography>
               <IconTButton
                 label='내역 보기'
@@ -166,14 +166,14 @@ const Home = () => {
                 sx={{ width: 96, backgroundColor: 'transparent' }}
                 onClick={() => handleNavigate('payment')}
               />
-            </Stack>
+            </Stack> */}
             <Stack spacing={3} sx={{ bgcolor: 'common.white', p: 2 }}>
               <Typography sx={text18B}>{getAuthStore().name}</Typography>
-              <Stack direction={'row'} justifyContent={'space-between'}>
-                <Stack direction={'row'} spacing={0.5}>
+              <Stack direction={'row'} justifyContent={'right'} >
+                {/* <Stack direction={'row'} spacing={0.5}>
                   <Typography sx={text40}>{time}</Typography>
                   <Typography sx={{ ...text18, pt: 2.1 }}>분</Typography>
-                </Stack>
+                </Stack> */}
                 <TButton
                   label='예약하기'
                   sx={{ width: 132, height: 40 }}
@@ -186,7 +186,7 @@ const Home = () => {
             <Stack direction={'row'} justifyContent={'space-between'}>
               <Typography sx={text16B}>나의 예약 현황</Typography>
               <IconTButton
-                label='예약 관리'
+                label='예약 내역'
                 color='grey'
                 direction='row-reverse'
                 icon={<ChevronRightIcon sx={{ width: 5.48, height: 9.42 }} />}

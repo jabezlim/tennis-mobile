@@ -2,9 +2,12 @@ import { gql } from '@apollo/client';
 
 export const MACHINES_QUERY = gql`
   query GetMachines($storeId: ID!) {
-    clt_machines(store_id: $storeId) {
+    machines(store_id: $storeId) {
       id
       name
+      machine_no
+      note
+      sort
     }
   }
 `;

@@ -93,7 +93,7 @@ const MyPage = forwardRef((_, ref) => {
             <Typography sx={text12}>{getAuthUser().contact}</Typography>
           </Stack>
           <TButton
-            label='회원정보 수정'
+            label='예약자정보 수정'
             color='tennis'
             onClick={() => handleNavigate('profile')}
             sx={{ width: 110, height: 28, ...text12 }}
@@ -151,21 +151,27 @@ const MyPage = forwardRef((_, ref) => {
               onClick={() => handleNavigate('lesson')}
             /> */}
           <IconTButton
-            label='예약 관리'
+            label='예약 내역'
             color='grey'
             icon={<EventAvailableIcon />}
             onClick={() => handleNavigate('booking')}
           />
           <IconTButton
+            label='구매 내역'
+            color='grey'
+            icon={<CreditCardIcon />}
+            onClick={() => handleNavigate('payment')}
+          />
+          {/* <IconTButton
             label='내 동영상'
             color='grey'
             icon={<VideoIcon />}
             onClick={() => handleNavigate('video')}
-          />
+          /> */}
         </Stack>
         <GreyBox sx={{ height: 8, mt: 3 }} />
         <Stack direction={'column'} spacing={0}>
-          <IconTButton
+          {/* <IconTButton
             label='구매내역'
             color='white'
             direction='row'
@@ -175,7 +181,7 @@ const MyPage = forwardRef((_, ref) => {
             labelSX={text14}
             onClick={() => handleNavigate('payment')}
           />
-          <Divider sx={{ borderColor: 'grey.200', mx: -2 }} />
+          <Divider sx={{ borderColor: 'grey.200', mx: -2 }} /> */}
           <IconTButton
             label='로그아웃'
             color='white'
@@ -188,7 +194,7 @@ const MyPage = forwardRef((_, ref) => {
           />
           <Divider sx={{ borderColor: 'grey.200', mx: -2 }} />
           <IconTButton
-            label='회원 탈퇴'
+            label='예약자 탈퇴'
             color='white'
             direction='row'
             justifyContent='flex-start'

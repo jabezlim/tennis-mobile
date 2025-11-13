@@ -34,25 +34,28 @@ const Machine = ({
   useQuery(MACHINES_QUERY, {
     variables: { storeId: id ? id : storeData.id },
     onCompleted: (data) => {
-      if (data.clt_machines && data.clt_machines.length > 0) {
-        setMachines(data.clt_machines);
-        setMachineNames(keyBy(data.clt_machines, 'id'));
+      console.log('MACHINES_QUERY', data);
+      if (data.machines && data.machines.length > 0) {
+        setMachines(data.machines);
+        setMachineNames(keyBy(data.machines, 'id'));
         if (!allitem) {
-          setMachine(data.clt_machines[0].id);
-          handleMachineId(data.clt_machines[0].id, data.clt_machines[0].name);
+          setMachine(data.machines[0].id);
+          handleMachineId(data.machines[0].id, data.machines[0].name, data.machines[0].machine_no);
         }
       }
     },
   });
 
   const handleChange = (event) => {
+    //console.log('event.target.value', event.target.value);
     setMachine(event.target.value);
     handleMachineId(event.target.value);
   };
-  const handleMachineId = (id, name) => {
+  const handleMachineId = (id, name, machine_no) => {
     if (handleMachine) {
       if (!name) name = machineNames[id].name;
-      handleMachine(id, name);
+      if (!machine_no) machine_no = machineNames[id].machine_no;
+      handleMachine(id, name, machine_no);
     }
   };
 

@@ -87,7 +87,7 @@ const MyProfile = forwardRef((_, ref) => {
   };
 
   return (
-    <DialogContainer ref={ref} title='회원정보 수정' handleOpen={handleOpen}>
+    <DialogContainer ref={ref} title='예약자정보 수정' handleOpen={handleOpen}>
       <Stack spacing={2.625}>
         <EditFormField
           ref={nameRef}

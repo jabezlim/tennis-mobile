@@ -53,7 +53,7 @@ const Register = () => {
     onCompleted: (data) => {
       if (data.clt_register.status) {
         setMessageAlert(
-          '회원 가입이 완료되었습니다. 로그인 페이지로 이동합니다.'
+          '예약자 등록이 완료되었습니다. 로그인 페이지로 이동합니다.'
         );
         setErrorAlert(false);
       } else {
@@ -140,7 +140,7 @@ const Register = () => {
                 mb: 5,
               }}
             >
-              회원가입
+              예약자 등록
             </Typography>
             <Store required storeId={id} handleStore={handleChangeStore} />
             <FormField
@@ -217,7 +217,7 @@ const Register = () => {
                 />
               </Stack>
             </Stack>
-            <TButton label='회원가입' onClick={handleSubmit} />
+            <TButton label='예약자 등록' onClick={handleSubmit} />
             <TButton
               variant='outlined'
               label='로그인 화면으로'

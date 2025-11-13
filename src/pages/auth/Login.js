@@ -29,6 +29,7 @@ const Login = () => {
   // graphql
   const [login] = useMutation(LOGIN_QUERY, {
     onCompleted: (data) => {
+      console.log('LOGIN_QUERY', data);
       if (data.clt_auth.status) {
         const authData = { remember: checked, ...data.clt_auth };
         setAuthData(authData);
@@ -94,7 +95,7 @@ const Login = () => {
               mb: 5,
             }}
           >
-            로그인
+            예약자 로그인
           </Typography>
           <Store required storeId={id} handleStore={handleChangeStore} />
           <FormField
@@ -160,7 +161,7 @@ const Login = () => {
           <TButton label='로그인' onClick={handleSubmit} />
           <TButton
             variant='outlined'
-            label='회원가입'
+            label='예약자 등록'
             onClick={handleRegister}
           />
         </Stack>

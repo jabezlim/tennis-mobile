@@ -4,7 +4,7 @@ import bookClock20Filled from '@iconify/icons-fluent/book-clock-20-filled';
 import { path } from 'config/path';
 
 const member = {
-  title: '회원',
+  title: '예약자',
   caption: 'Member',
   type: 'group',
   icon: bookClock20Filled,

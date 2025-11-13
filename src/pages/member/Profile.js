@@ -120,7 +120,7 @@ const Profile = () => {
   const { errors, touched, handleSubmit, getFieldProps } = formik;
 
   return (
-    <MainCard darkTitle title='회원 정보 수정' contentSX={{ maxWidth: 500 }}>
+    <MainCard darkTitle title='예약자 정보 수정' contentSX={{ maxWidth: 500 }}>
       <FormikProvider value={formik}>
         <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
           <Stack spacing={2}>

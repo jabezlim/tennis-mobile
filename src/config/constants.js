@@ -97,6 +97,7 @@ export const CATEGORIES = [
 export const CATEGORY_TYPE = {
   1: '레슨',
   2: '시설이용권',
+  3: '당일이용권'
 };
 
 export const PERIOD_TYPE = {

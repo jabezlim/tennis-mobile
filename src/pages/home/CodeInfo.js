@@ -14,7 +14,7 @@ const CodeInfo = forwardRef((_, ref) => {
     <DialogContainer ref={ref} isFooter={false}>
       <Stack spacing={2} sx={{ textAlign: 'center', pt: 3.5 }}>
         <Typography sx={{ fontSize: 20, lineHeight: '20px', fontWeight: 700 }}>
-          회원 QR 코드
+          예약자 QR 코드
         </Typography>
         <Typography sx={{ ...text12, color: 'text.grey' }}>
           지점 이용을 위해 QR 코드를 키오스크에 태그해 주세요.
@@ -46,7 +46,7 @@ const CodeInfo = forwardRef((_, ref) => {
             {getAuthBarcode()}
           </Typography>
           <Typography sx={{ color: 'text.grey', pt: 12, ...text11 }}>
-            위 QR코드는 회원 개인의 고유 코드이며 타인에게의 양도를 금합니다.
+            위 QR코드는 예약자 개인의 고유 코드이며 타인에게의 양도를 금합니다.
           </Typography>
         </Stack>
       </Stack>

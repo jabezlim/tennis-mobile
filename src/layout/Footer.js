@@ -48,7 +48,7 @@ const Footer = ({ isDialog = false }) => {
           value={path.urls.booking}
           onClick={() => navigate(path.urls.booking)}
         />
-        <BottomNavigationAction
+        {/* <BottomNavigationAction
           label='시설이용권'
           icon={<TicketIcon />}
           sx={{
@@ -59,7 +59,7 @@ const Footer = ({ isDialog = false }) => {
           }}
           value={path.urls.ticketMachine}
           onClick={() => navigate(path.urls.ticketMachine)}
-        />
+        /> */}
         {/* <BottomNavigationAction
           label='레슨 수강'
           icon={<LessonIcon />}

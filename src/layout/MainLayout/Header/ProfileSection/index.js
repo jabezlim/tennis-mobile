@@ -197,7 +197,7 @@ const ProfileSection = () => {
                         <ListItemText
                           primary={
                             <Typography variant='body2'>
-                              회원 정보 수정
+                              예약자 정보 수정
                             </Typography>
                           }
                         />
