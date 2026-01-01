@@ -50,11 +50,13 @@ const TimeTable = ({
 
   useEffect(() => {
     if (date) {
+      console.log('today : ', today);
+      console.log('date : ', format(date, DATE_FORMAT));
       setNextDate({
-        date: format(addDays(parseISO(date.date), 1), DATE_FORMAT),
-        day: (date.day + 1) % 7,
+        date: format(addDays(date, 1), DATE_FORMAT),
+        day: (date.getDay() + 1) % 7,
       });
-      if ((start_store_time>11) || (date.date === today.date && Number(today.hour) > 11)) {
+      if ((start_store_time>11) || (format(date, DATE_FORMAT) === today.date && Number(today.hour) > 11)) {
         setIsShowAM(false);
       } else {
         setIsShowAM(true);
@@ -69,17 +71,17 @@ const TimeTable = ({
       for (let i = start_store_time; i < 12; i++) {
         // temp.am.push({ date: date.date, hour: padStart(i, 2, '0') });
         temp.am.push({
-          date: date.date,
+          date: format(date, DATE_FORMAT),
           hour: String(i).padStart(2, '0'),
-          day: DAY_OF_WEEK[date.day],
+          day: DAY_OF_WEEK[date.getDay()],
         });
       }
       for (let i = start_store_time < 12 ? 12 : start_store_time; i < end_store_time; i++) {
         // temp.pm.push({ date: date.date, hour: padStart(i, 2, '0') });
         temp.pm.push({
-          date: date.date,
+          date: format(date, DATE_FORMAT),
           hour: String(i).padStart(2, '0'),
-          day: DAY_OF_WEEK[date.day],
+          day: DAY_OF_WEEK[date.getDay()],
         });
       }
       if ((start_store_time == 0) && (NEXT_DATE_TIME_PERIOD > 0)) {
@@ -104,7 +106,7 @@ const TimeTable = ({
           <Stack direction={'row'} alignItems={'flex-end'} spacing={0.5}>
             <Typography sx={text14B}>AM</Typography>
             <Typography sx={{ ...text12 }}>
-              {date && `${date.date} (${CALENDAR_HEAD[date.day]})`}
+              {date && `${format(date, DATE_FORMAT)} (${CALENDAR_HEAD[date.getDay()]})`}
             </Typography>
           </Stack>
           {times &&
@@ -127,7 +129,7 @@ const TimeTable = ({
         <Stack direction={'row'} alignItems={'flex-end'} spacing={0.5}>
           <Typography sx={text14B}>PM</Typography>
           <Typography sx={{ ...text12 }}>
-            {date && `${date.date} (${CALENDAR_HEAD[date.day]})`}
+            {date && `${format(date, DATE_FORMAT)} (${CALENDAR_HEAD[date.getDay()]})`}
           </Typography>
         </Stack>
         {times &&

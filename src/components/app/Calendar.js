@@ -14,7 +14,7 @@ import {
 import { text20B } from 'config/styles';
 // helpers
 import { getNewDate } from 'helpers/calendar';
-import { getDay, parseISO } from 'date-fns';
+import { getDay, parseISO, addDays, startOfToday } from 'date-fns';
 
 const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
   const containerRef = useRef();
@@ -28,14 +28,14 @@ const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
   const [isMonth, setIsMonth] = useState(onlyMonth);
 
   useEffect(() => {
-    const temp = calendar ? parseISO(calendar) : new Date();
+    const temp = calendar ? parseISO(calendar) : startOfToday(); // new Date();
     const y = String(temp.getFullYear());
     const m = String(temp.getMonth() + 1).padStart(2, '0');
     const d = String(temp.getDate()).padStart(2, '0');
     const day = getDay(temp);
 
     setToday({ year: y, month: m, date: d, day: day });
-    setSelected({ year: y, month: m, date: d, day: day });
+    setSelected(temp);
     setYear(y);
     setMonth(m);
     setDate(d);
@@ -74,13 +74,13 @@ const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
     // }
     setIsMonth(type);
   };
-  const handleCalendar = (y, m, d, day) => {
-    setSelected({ year: y, month: m, date: d, day: day });
+  const handleCalendar = (seldate) => {
+    setSelected(seldate);
   };
 
   return (
     <Stack spacing={1}>
-      <Stack direction={'row'} alignItems={'center'} spacing={1.5}>
+      {/* <Stack direction={'row'} alignItems={'center'} spacing={1.5}>
         {isMonth && (
           <ChevronLeftIcon
             sx={{ width: 7.4, height: 12 }}
@@ -94,7 +94,7 @@ const Calendar = ({ onlyMonth = false, calendar, handleDate }) => {
             onClick={() => handleClick('next')}
           />
         )}
-      </Stack>
+      </Stack> */}
       <Stack
         spacing={1.25}
         alignItems={'center'}

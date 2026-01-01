@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { getDay, parseISO } from 'date-fns';
+import { getDay, parseISO, startOfToday, addDays } from 'date-fns';
 // material
 import { Stack, Typography } from '@mui/material';
 // config
 import { CALENDAR_HEAD } from 'config/constants';
 import { text12, text14B } from 'config/styles';
+import { da } from 'date-fns/locale';
 
 const CalendarWeek = ({ ymd, selected, handleCalendar }) => {
   // data
@@ -14,7 +15,7 @@ const CalendarWeek = ({ ymd, selected, handleCalendar }) => {
   const [dates, setDates] = useState();
 
   useEffect(() => {
-    const temp = (ymd && parseISO(ymd)) || new Date();
+    const temp = (ymd && parseISO(ymd)) || startOfToday(); // new Date();
     const y = String(temp.getFullYear());
     const m = String(temp.getMonth() + 1).padStart(2, '0');
     // const d = String(temp.getDate()).padStart(2, '0');
@@ -23,13 +24,13 @@ const CalendarWeek = ({ ymd, selected, handleCalendar }) => {
     setMonth(m);
     // setDate(d);
 
-    setDates(createWeekCalendarDate(temp, temp.getDate()));
+    setDates(createWeekCalendarDate(temp));
   }, [ymd]);
 
-  const handleDate = (date, day) => {
+  const handleDate = (date) => {
     // setDate(date);
     if (handleCalendar) {
-      handleCalendar(year, month, date, day);
+      handleCalendar(date);
     }
   };
 
@@ -45,10 +46,10 @@ const CalendarWeek = ({ ymd, selected, handleCalendar }) => {
               sx={{
                 width: '100%',
                 py: 1,
-                border: selected && week.date === selected.date ? 1 : 0,
+                border: selected && week.getDate() === selected.getDate() ? 1 : 0,
                 borderColor: 'tennis.main',
               }}
-              onClick={() => handleDate(week.date, week.day)}
+              onClick={() => handleDate(week)}
             >
               <Typography
                 sx={{
@@ -61,9 +62,9 @@ const CalendarWeek = ({ ymd, selected, handleCalendar }) => {
                       : '',
                 }}
               >
-                {CALENDAR_HEAD[week.day]}
+                {CALENDAR_HEAD[week.getDay()]}
               </Typography>
-              <Typography sx={text14B}>{week.date}</Typography>
+              <Typography sx={text14B}>{week.getDate()}</Typography>
             </Stack>
           );
         })}
@@ -71,12 +72,15 @@ const CalendarWeek = ({ ymd, selected, handleCalendar }) => {
   );
 };
 
-const createWeekCalendarDate = (ymd, date) => {
-  const day = getDay(ymd);
+const PERIOD = 4;
+const createWeekCalendarDate = (ymd) => {
   const dates = [];
-  for (let i = 0; i < 3; i++) {
-    dates.push({ date: String(date + i).padStart(2, '0'), day: (day + i) % 7 });
+  for (let i = 0; i < PERIOD; i++) {
+    dates.push(addDays(ymd, i));
   }
+  // for (let i = 0; i < 4; i++) {
+  //   dates.push({ date: String(date + i).padStart(2, '0'), day: (day + i) % 7 });
+  // }
   return dates;
 };
 

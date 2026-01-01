@@ -237,15 +237,15 @@ const Booking = () => {
   };
   const handleSelectDate = (date) => {
     initBookings();
-    const d = `${date.year}-${date.month}-${date.date}`;
-    setDate({ date: d, day: date.day });
+    const d = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    setDate(date);
 
     const variables = {
       storeId: storeData.id,
       date: d,
     };
     if (NEXT_DATE_TIME_PERIOD > 0) {
-      const nextDate = format(addDays(parseISO(d), 1), DATE_FORMAT);
+      const nextDate = format(addDays(date, 1), DATE_FORMAT);
       variables.nextDate = nextDate;
       variables.nextTime = `${String(NEXT_DATE_TIME_PERIOD).padStart(
         2,
@@ -410,7 +410,7 @@ const Booking = () => {
             <Box sx={{ width: 8, height: 8, bgcolor: 'grey.200', mt: 0.1 }} />
             <Typography sx={text11}>예약불가</Typography>
           </Stack>
-          {/* <Stack direction={'row'} spacing={0.5}>
+          <Stack direction={'row'} spacing={0.5}>
             <Box
               sx={{
                 width: 8,
@@ -421,7 +421,7 @@ const Booking = () => {
               }}
             />
             <Typography sx={text11}>할인</Typography>
-          </Stack> */}
+          </Stack>
         </Stack>
       </Stack>
       {/* { memberTime > 0 && (
