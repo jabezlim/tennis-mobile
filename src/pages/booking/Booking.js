@@ -69,6 +69,7 @@ import {
 } from 'helpers/timeTable';
 import { getAuthBarcode, getAuthUser } from 'helpers/storage';
 import Payment from 'pages/ticket/Payment';
+import { fNumber } from 'utils/formatNumber';
 
 const Booking = () => {
   const navigate = useNavigate();
@@ -214,14 +215,13 @@ const Booking = () => {
       //  setTotalTime(0);
       //} else 
       setTotalTime(selectedTime);
-      console.log('selectedTime', selectedTime);
       setItem(
         { 
           id: 170, 
           name : machine ? machine.name : '코트이용권',
           period: selectedTime / 60, 
           period_type: 2, 
-          price : selectedTime / 60 * price,
+          price : booking ? (((selectedTime-booking.time.discount)) / 60) * price : (selectedTime / 60) * price,
           category_id: 3,
           menu_type: 1,
         }
@@ -357,6 +357,7 @@ const Booking = () => {
     } else {*/
       setItem({
         ...item,
+        price : (((booking.time.total - booking.time.discount)) / 60) * price,
         storeId: storeData.id,
         machineId: machine.id,
         memberId: getAuthUser().id,
@@ -593,8 +594,8 @@ const BookingDialog = ({
               >
                 <Typography sx={text14B}>결제금액</Typography>
                 <Typography sx={text18B}>                      
-                  { booking.machine.mprice * ((booking.time.total - booking.time.discount) / 60) } 원
-                  &nbsp;( {(booking.time.total - booking.time.discount)  / 60 } 시간 )         
+                  { fNumber(booking.machine.mprice * ((booking.time.total - booking.time.discount) / 60)) } 원
+                  {/* &nbsp;( {(booking.time.total - booking.time.discount)  / 60 } 시간 )          */}
                 </Typography>
               </Stack>
             </Stack>
