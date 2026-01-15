@@ -9,6 +9,7 @@ const checkLocalStorage = () => {
 };
 
 export const setAuthData = (data) => {
+  //console.log('setAuthData', data);
   removeAuthData();
 
   const storage = {
@@ -18,6 +19,7 @@ export const setAuthData = (data) => {
       name: data.user_name,
       contact: data.user_contact,
       email: data.user_email,
+      type: data.user_type,
     },
     store: encrypt(data.user_store),
     barcode: data.user_barcode,

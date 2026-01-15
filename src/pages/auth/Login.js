@@ -29,7 +29,7 @@ const Login = () => {
   // graphql
   const [login] = useMutation(LOGIN_QUERY, {
     onCompleted: (data) => {
-      console.log('LOGIN_QUERY', data);
+      //console.log('LOGIN_QUERY', data);
       if (data.clt_auth.status) {
         const authData = { remember: checked, ...data.clt_auth };
         setAuthData(authData);

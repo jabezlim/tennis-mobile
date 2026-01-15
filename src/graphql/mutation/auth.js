@@ -12,6 +12,7 @@ export const LOGIN_QUERY = gql`
       user_email
       user_store
       user_barcode
+      user_type
       token
     }
   }

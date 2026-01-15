@@ -34,7 +34,7 @@ const Machine = ({
   useQuery(MACHINES_QUERY, {
     variables: { storeId: id ? id : storeData.id },
     onCompleted: (data) => {
-      console.log('MACHINES_QUERY', data);
+      //console.log('MACHINES_QUERY', data);
       if (data.machines && data.machines.length > 0) {
         setMachines(data.machines);
         setMachineNames(keyBy(data.machines, 'id'));

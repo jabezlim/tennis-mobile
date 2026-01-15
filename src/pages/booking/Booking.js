@@ -31,7 +31,6 @@ import {
   DISCOUNT_SCHEDULE_QUERY,
   MACHINE_BLOCKED_QUERY,
   MACHINE_BOOKED_QUERY,
-  MEMBER_TIMES_QUERY,
 } from 'graphql/query';
 // components
 import { Calendar, Machine, TimeTable } from 'components/app';
@@ -63,7 +62,6 @@ import { path } from 'config/path';
 // helpers
 import { storeDataVar } from 'helpers/cache';
 import {
-  createContinuousTime,
   createMachineBlockedData,
   createMachineData,
 } from 'helpers/timeTable';
@@ -76,24 +74,23 @@ const Booking = () => {
   const storeData = useReactiveVar(storeDataVar);
   const paymentRef = useRef();
   // data
-  const [date, setDate] = useState();
+  const [date, setDate] = useState(new Date());
   const [period] = useState(storeData.booking_time_period);
   const [machine, setMachine] = useState();
-  const [memberTime, setMemberTime] = useState(0);
   const [booking, setBooking] = useState();
-  const [totalTime, setTotalTime] = useState(0);
   const [blocked, setBlocked] = useState();
   const [blockList, setBlockList] = useState();
   const [discount, setDiscount] = useState();
   const [booked, setBooked] = useState();
   const [bookList, setBookList] = useState();
-  const [selectedTimes, setSelectedTimes] = useState([]);
   const [bookingTimes, setBookingTimes] = useState([]);
   const [open, setOpen] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [message, setMessage] = useState();
   const [item, setItem] = useState();
-  const [price, setPrice] = useState(3500);
+  const [price, setPrice] = useState(0);
+  const [loading, setLoading] = useState(true);
+
   // graphql
   const [payment] = useMutation(BOOK_QUERY, {
     onCompleted: (data) => {
@@ -107,14 +104,14 @@ const Booking = () => {
     onError: (error) => console.log(error),
   });
 
-  useQuery(MEMBER_TIMES_QUERY, {
-    onCompleted: (data) => {
-      if (data.clt_membertimes) {
-        const time = data.clt_membertimes.time - data.clt_membertimes.used_time;
-        setMemberTime(time);
-      }
-    },
-  });
+  // useQuery(MEMBER_TIMES_QUERY, {
+  //   onCompleted: (data) => {
+  //     if (data.clt_membertimes) {
+  //       const time = data.clt_membertimes.time - data.clt_membertimes.used_time;
+  //       setMemberTime(time);
+  //     }
+  //   },
+  // });
   useQuery(MACHINE_BLOCKED_QUERY, {
     variables: { storeId: storeData.id },
     onCompleted: (data) => {
@@ -154,10 +151,12 @@ const Booking = () => {
         });
         setBookList(temp);
       }
+      setLoading(false);
     },
     onError: () => {
       setMessage('오류가 발생했습니다. 잠시 후에 다시 사용해 주세요.');
       setOpenAlert(true);
+      setLoading(false);
     },
   });
   const createDate = (start, end) => {
@@ -177,64 +176,22 @@ const Booking = () => {
   };
 
   useEffect(() => {
-    //console.log(storeData);
     if (machine && blockList) {
       setBlocked(blockList[machine.id]);
     }
   }, [machine, blockList]);
+
   useEffect(() => {
     if (machine && bookList) {
       setBooked(bookList[machine.id]);
     }
   }, [machine, bookList]);
 
-  useEffect(() => {
-    if (selectedTimes) {
-      if (selectedTimes.length === 2) {
-        const times = [
-          `${selectedTimes[0].date} ${selectedTimes[0].hour}:${selectedTimes[0].minute}`,
-          `${selectedTimes[1].date} ${selectedTimes[1].hour}:${selectedTimes[1].minute}`,
-        ];
-        const temp = createContinuousTime(times, period);
-        setBookingTimes(temp);
-      } else if (selectedTimes.length === 1) {
-        setBookingTimes([
-          `${selectedTimes[0].date} ${selectedTimes[0].hour}:${selectedTimes[0].minute}:00`,
-        ]);
-      }
-    }
-    // eslint-disable-next-line
-  }, [selectedTimes]);
-
-  useEffect(() => {
-    if (bookingTimes.length > 0) {
-      const selectedTime = bookingTimes.length * period;
-      //if (selectedTime > memberTime) {
-      //  setMessage('선택하신 예약 시간이 사용 가능 시간을 초과하였습니다.');
-      //  setOpenAlert(true);
-      //  setTotalTime(0);
-      //} else 
-      setTotalTime(selectedTime);
-      setItem(
-        { 
-          id: 170, 
-          name : machine ? machine.name : '코트이용권',
-          period: selectedTime / 60, 
-          period_type: 2, 
-          price : booking ? (((selectedTime-booking.time.discount)) / 60) * price : (selectedTime / 60) * price,
-          category_id: 3,
-          menu_type: 1,
-        }
-      );
-    }
-    // eslint-disable-next-line
-  }, [bookingTimes]);
-
   const initBookings = () => {
-    setSelectedTimes([]);
     setBookingTimes([]);
     setItem();
   };
+
   const handleSelectDate = (date) => {
     initBookings();
     const d = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -255,20 +212,32 @@ const Booking = () => {
     getMachineBooked({ variables });
   };
   const handleChangeMachine = (id, name, machine_no) => {
-    const mprice = machine_no == '' ? 3500 : Number(machine_no);
+    const mprice = machine_no === '' ? 3500 : Number(machine_no);
     setMachine({ id, name, mprice });
-    setPrice( mprice );
     initBookings();
   };
-  const handleTime = (time) => {
-    if (selectedTimes.length === 1) {
-      setSelectedTimes((prev) => [...prev, time]);
-    } else {
-      setSelectedTimes([time]);
-    }
-  };
+
   const handleBooking = () => {
-    let checkDuplicate = true;
+    const temp = {
+      price : price,
+      machine: machine,
+      bookings: bookingTimes,
+    };
+    console.log('booking:', temp);
+    setBooking(temp);
+
+    setItem({ 
+      id: 170, 
+      name : machine ? machine.name : '코트이용권',
+      period: 1, 
+      period_type: 2, 
+      price : price,
+      category_id: 3,
+      menu_type: 1,
+    });
+    setOpen(true);
+
+    /*let checkDuplicate = true;
     if (booked) {
       for (const datetime of bookingTimes) {
         if (booked.includes(datetime)) {
@@ -314,12 +283,13 @@ const Booking = () => {
     } else {
       setMessage('예약 시간을 확인해 주세요.');
       setOpenAlert(true);
-    }
+    }*/
   };
-  const handleDay = (datetime) => {
-    const dt = parseISO(datetime);
-    return DAY_OF_WEEK[getDay(dt)];
-  };
+
+  // const handleDay = (datetime) => {
+  //   const dt = parseISO(datetime);
+  //   return DAY_OF_WEEK[getDay(dt)];
+  // };
 
   const handlePayment = () => {
     const times = [];
@@ -339,55 +309,46 @@ const Booking = () => {
       addMinutes(parseISO(bookingTimes[bookingTimes.length - 1]), period),
       DATETIME_FORMAT
     ).split(' ');
-    const variables = {
+    // const variables = {
+    //   storeId: storeData.id,
+    //   machineId: machine.id,
+    //   memberId: getAuthUser().id,
+    //   barcode: getAuthBarcode(),
+    //   discount: 0,
+    //   times: JSON.stringify(times),
+    //   startDate: startDateTime[0],
+    //   startTime: startDateTime[1],
+    //   endDate: endDateTime[0],
+    //   endTime: endDateTime[1],
+    //   usedTime: booking.bookings.length * period,
+    // };
+
+    setItem({
+      ...item,
+      price : price,
       storeId: storeData.id,
       machineId: machine.id,
       memberId: getAuthUser().id,
       barcode: getAuthBarcode(),
-      discount: booking.time.discount,
+      discount: 0, //booking.time.discount,
       times: JSON.stringify(times),
       startDate: startDateTime[0],
       startTime: startDateTime[1],
       endDate: endDateTime[0],
       endTime: endDateTime[1],
-      usedTime: booking.time.total - booking.time.discount,
-    };
-    /*if (booking.time.member >= (booking.time.total - booking.time.discount)) {
-      payment({ variables });
-    } else {*/
-      setItem({
-        ...item,
-        price : (((booking.time.total - booking.time.discount)) / 60) * price,
-        storeId: storeData.id,
-        machineId: machine.id,
-        memberId: getAuthUser().id,
-        barcode: getAuthBarcode(),
-        discount: booking.time.discount,
-        times: JSON.stringify(times),
-        startDate: startDateTime[0],
-        startTime: startDateTime[1],
-        endDate: endDateTime[0],
-        endTime: endDateTime[1],
-        usedTime: booking.time.total - booking.time.discount,
-      })
-      paymentRef.current.open()
-    //}
+      usedTime: booking.bookings.length * period,
+    })
+    paymentRef.current.open()  
   };
 
-  const handleNavigate = (path) => {
-    if (path === 'payment') paymentRef.current.open();
-  };
+  // const handleNavigate = (path) => {
+  //   if (path === 'payment') paymentRef.current.open();
+  // };
 
   return (
     <PageContainer label='예약하기'>
       <Stack spacing={2}>
         <Typography sx={text15B}>코트 선택</Typography>
-        {/* { storeData.id == 14 && (
-        <Box
-          component="img"
-          src={`${path.basename}/images/courtlayout.png`}
-          sx={{ width: '100%', height: 'auto' }}
-        />  )} */}
         <Machine required handleMachine={handleChangeMachine} />
       </Stack>
       <Box
@@ -398,9 +359,6 @@ const Booking = () => {
       <Stack direction={'row'} justifyContent={'space-between'}>
         <Stack spacing={0.75}>
           <Typography sx={text15B}>이용시간</Typography>
-          {/* <Typography sx={{ ...text11, color: 'grey.800' }}>
-            6시간 이상은 지점에 문의
-          </Typography> */}
         </Stack>
         <Stack direction={'row'} spacing={1}>
           <Stack direction={'row'} spacing={0.5}>
@@ -425,37 +383,30 @@ const Booking = () => {
           </Stack>
         </Stack>
       </Stack>
-      {/* { memberTime > 0 && (
-      <Stack direction={'row'} spacing={0.3} sx={{ mt: 3, mb: 2 }}>
-        <Typography sx={{ ...text14, fontWeight: 500 }}>
-          잔여 이용권:
-        </Typography>
-        <Typography sx={text14B}>{memberTime}분</Typography>
-      </Stack>
-      )} */}
+      {loading ? (<>Loading...</>) : (
       <TimeTable
         date={date}
         period={period}
         blocked={blocked}
         discounts={discount}
         booked={booked}
-        bookings={bookingTimes}
-        handleTime={handleTime}
+        bookingTimes={bookingTimes}
+        setBookingTimes={setBookingTimes}
+        setPrice={setPrice}
+        machine={machine}
         start_store_time={storeData.store_open}
         end_store_time={storeData.store_close}
       />
+      )}
       <Box sx={{ height: 149 }} />
       { bookingTimes.length > 0 && (
         <BookingModal
           times={bookingTimes}
-          totalTime={totalTime}
           period={period}
           onClick={handleBooking}
         />
       )}
-      {/* {item && (
-        <TicketModal item={item} onClick={() => handleNavigate('payment')} />
-      )} */}
+
       <BookingDialog
         open={open}
         setOpen={setOpen}
@@ -546,45 +497,15 @@ const BookingDialog = ({
                 bgcolor: 'common.white',
               }}
             >
-              {booking.time && booking.time.total / 60} 시간
+              {booking.bookings && booking.bookings.length } 시간
             </Typography>
             <Box sx={{ width: 44, borderTop: '1px dashed #CECECE' }} />
             <Typography sx={text14B}>
               {end && format(end, TIME_FORMAT_AM_PM)}
             </Typography>
           </Stack>
-        </Stack>
-        { /* booking.time && ((booking.time.member >= (booking.time.total - booking.time.discount)) && (
-          <>
-            <Stack spacing={1} sx={{ mt: 1.5 }}>
-              <Stack
-                direction={'row'}
-                alignItems={'flex-end'}
-                justifyContent={'space-between'}
-              >
-                <Typography sx={text14B}>시설 이용권 사용</Typography>
-                <Typography sx={text18B}>
-                  {booking.time && booking.time.total - booking.time.discount}분
-                  차감
-                </Typography>
-              </Stack>
-            </Stack>
-            <Typography
-              sx={{
-                ...text11,
-                color: 'error.main',
-                textAlign: 'right',
-                my: 0.5,
-              }}
-            >
-              차감 후 잔여 시간{' '}
-              {booking.time &&
-                booking.time.member - (booking.time.total - booking.time.discount)}
-              분
-            </Typography>
-          </>
-        )  */}
-         { booking.machine && ( 
+        </Stack>        
+        { booking.machine && ( 
           <>
             <Stack spacing={1} sx={{ mt: 1.5 }}>
               <Stack
@@ -594,8 +515,7 @@ const BookingDialog = ({
               >
                 <Typography sx={text14B}>결제금액</Typography>
                 <Typography sx={text18B}>                      
-                  { fNumber(booking.machine.mprice * ((booking.time.total - booking.time.discount) / 60)) } 원
-                  {/* &nbsp;( {(booking.time.total - booking.time.discount)  / 60 } 시간 )          */}
+                  { fNumber(booking.price) } 원
                 </Typography>
               </Stack>
             </Stack>
@@ -615,7 +535,7 @@ const BookingDialog = ({
   );
 };
 
-const BookingModal = ({ times = [], period = 15, totalTime = 0, onClick }) => {
+const BookingModal = ({ times = [], period = 15, onClick }) => {
   const start = times[0] && parseISO(times[0]);
   const end =
     times.length > 0 && addMinutes(parseISO(times[times.length - 1]), period);
@@ -652,7 +572,7 @@ const BookingModal = ({ times = [], period = 15, totalTime = 0, onClick }) => {
       </Stack>
       <TButton
         label='예약하기'
-        disabled={times.length === 0 || totalTime === 0}
+        disabled={times.length === 0}
         onClick={onClick}
       />
     </GreyBox>

@@ -3,6 +3,11 @@ export const image_path =
     ? 'http://localhost/tennis/images'
     : '/tennis/images';
 
+export const cibase =
+  process.env.NODE_ENV === 'development'
+    ? 'http://tennissquad.local.tst/design/ci/index.php/api/v1/'
+    : '/design/ci/index.php/api/v1/';
+    
 export const path = {
   image: image_path,
   basename: '/tennis/snumob',

@@ -30,8 +30,8 @@ import { requestPayment } from 'helpers/payment';
 import { storeDataVar } from 'helpers/cache';
 // utils
 import { fNumber } from 'utils/formatNumber';
-import { convertDayCodeToText } from 'utils/util';
-import { fDateToDot, fHmsToHm } from 'utils/formatDateTime';
+//import { convertDayCodeToText } from 'utils/util';
+//import { fDateToDot, fHmsToHm } from 'utils/formatDateTime';
 // pages
 import StoreInfo from 'pages/store/Info';
 
@@ -229,34 +229,13 @@ const Payment = forwardRef(({ item }, ref) => {
         <Stack direction={'row'} spacing={1}>
           {isLesson && (
             <Typography sx={text14B}>
-              {/* {item && convertDayCodeToText(item.lesson_day)}요일 */}
               {item && item.name }
             </Typography>
           )}
           <Typography sx={text14B}>
             {item && `${item.period}${PERIOD_TYPE[item.period_type]}`}
-          </Typography>
-          {/* {isLesson && (
-            <Stack direction={'row'} spacing={0.5}>
-              <Typography sx={text14B}>{item && item.time}분</Typography>
-              <Typography sx={text14}>
-                {item && fHmsToHm(item.lesson_start_time)}-
-                {item && fHmsToHm(item.lesson_end_time)}
-              </Typography>
-            </Stack>
-          )} */}
-        </Stack>
-        {/* {isLesson && (
-          <Stack direction={'row'} spacing={0.5}>
-            <Typography sx={text14B}>레슨 날짜</Typography>
-            <Typography sx={text14}>
-              {item &&
-                `${fDateToDot(item.dates[0])} - ${fDateToDot(
-                  item.dates[item.dates.length - 1]
-                )}`}
-            </Typography>
-          </Stack>
-        )} */}
+          </Typography>          
+        </Stack>      
       </Stack>
       <GreyBox sx={{ height: 8 }} />
       <Stack spacing={2} sx={{ py: 2 }}>
@@ -311,7 +290,7 @@ const Payment = forwardRef(({ item }, ref) => {
         </AccordionSummary>
         <AccordionDetails>
           <Typography sx={text12}>
-            스크린 테니스 예약 취소 및 환불규정
+            예약 취소 및 환불규정
           </Typography>
           <Typography sx={{ ...text12, mt: 0.5 }}>
             예약시간 기준 6시간 전 : 전액 환불
