@@ -12,7 +12,7 @@ import QRCode from 'react-qr-code';
 // material
 import { Box, Stack, Typography } from '@mui/material';
 // graphql
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery, useReactiveVar } from '@apollo/client';
 import { BOOKINGS_TYPE_QUERY, MEMBER_TIMES_QUERY } from 'graphql/query';
 // components
 import { GreyBox, PageContainer } from 'components/page';
@@ -32,6 +32,9 @@ import { path } from 'config/path';
 import { DATE_FORMAT } from 'config/constants';
 // helpers
 import { getAuthBarcode, getAuthStore, getAuthUser } from 'helpers/storage';
+import { storeDataVar } from 'helpers/cache';
+// context
+import { useGlobalContext } from 'context';
 // utils
 import { fDateToDot, fHmsToHm } from 'utils/formatDateTime';
 // pages
@@ -43,6 +46,8 @@ import MyBooking from 'pages/mypage/MyBooking';
 const LIST_LIMIT = 5;
 const Home = () => {
   const navigate = useNavigate();
+  const { settingMessage } = useGlobalContext();
+  const storeData = useReactiveVar(storeDataVar);
   const codeRef = useRef();
   const profileRef = useRef();
   const paymentRef = useRef();
@@ -56,6 +61,7 @@ const Home = () => {
   const [totalRow, setTotalRow] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [doorLoading, setDoorLoading] = useState(false);
 
   // graphql
   useQuery(MEMBER_TIMES_QUERY, {
@@ -115,6 +121,36 @@ const Home = () => {
     }
   };
 
+  // Returns true if this specific booking is within the door-access window (5 min before start → end)
+  const isDoorEligible = (booking) => {
+    if (!storeData.door_ip) return false;
+    const now = new Date();
+    const start = parseISO(`${booking.start_date} ${booking.start_time}`);
+    const end = parseISO(`${booking.end_date} ${booking.end_time}`);
+    return differenceInMinutes(start, now) <= 5 && now < end;
+  };
+
+  const cibase = process.env.NODE_ENV === 'development'
+    ? 'http://tennissquad.local.tst/tennis/ci/index.php/api/v1/'
+    : '/tennis/ci/index.php/api/v1/';
+
+  const handleDoorOpen = async () => {
+    setDoorLoading(true);
+    try {
+      const res = await fetch(
+        `${cibase}machine/door?store=${storeData.id}&barcode=${getAuthBarcode()}`
+      );
+      const data = await res.json();
+      settingMessage('message', data.message || (data.status ? '문이 열렸습니다.' : '문 열기 실패'));
+      settingMessage('open', true);
+    } catch {
+      settingMessage('message', '오류가 발생했습니다.');
+      settingMessage('open', true);
+    } finally {
+      setDoorLoading(false);
+    }
+  };
+
   return (
     <>
       <PageContainer>
@@ -146,14 +182,6 @@ const Home = () => {
             </Typography>
           </Stack>
         </GreyBox>
-        {/* <Stack direction={'row'} spacing={1} sx={{ mt: 1 }}>
-          <TButton
-            label='회원정보 수정'
-            color='grey'
-            onClick={() => handleNavigate('profile')}
-          />
-          <TButton label='지점 정보' color='grey' />
-        </Stack> */}
         <GreyBox spacing={3} sx={{ mt: 3, px: 2, pt: 3, pb: 2 }}>
           <Stack spacing={1}>
             <Stack direction={'row'} justifyContent={'space-between'}>
@@ -208,14 +236,16 @@ const Home = () => {
                     locale: ko,
                     addSuffix: true,
                   });
+                  const eligible = isDoorEligible(booking);
                   return (
                     <Stack
                       direction={'row'}
                       justifyContent={'space-between'}
+                      alignItems={'stretch'}
                       sx={{ bgcolor: 'common.white', p: 2 }}
                       key={index}
                     >
-                      <Stack spacing={1}>
+                      <Stack spacing={1} justifyContent={'center'}>
                         <Stack direction={'row'} spacing={0.5}>
                           <Typography sx={text15B}>
                             {booking.machine_program_name}
@@ -226,23 +256,32 @@ const Home = () => {
                             {booking.type === 'lesson' ? '레슨' : '시설 이용'}
                           </Typography>
                         </Stack>
-
                         <Typography sx={text12}>
                           {`${fDateToDot(booking.start_date)} ${fHmsToHm(
                             booking.start_time
                           )} - ${fHmsToHm(booking.end_time)} (${period}분)`}
                         </Typography>
                       </Stack>
-                      <Typography
-                        sx={{
-                          ...text12,
-                          color:
-                            date === booking.start_date ? 'error.main' : '',
-                          pr: 1,
-                        }}
-                      >
-                        {distance}
-                      </Typography>
+                      <Stack direction={'row'} alignItems={'center'} spacing={1.5}>
+                        <Typography
+                          sx={{
+                            ...text12,
+                            color:
+                              date === booking.start_date ? 'error.main' : '',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {distance}
+                        </Typography>
+                        {eligible && (
+                          <TButton
+                            label={doorLoading ? '...' : '문 열기'}
+                            disabled={doorLoading}
+                            onClick={handleDoorOpen}
+                            sx={{ alignSelf: 'stretch', minWidth: 64, fontSize: 11, px: 1 }}
+                          />
+                        )}
+                      </Stack>
                     </Stack>
                   );
                 })}
