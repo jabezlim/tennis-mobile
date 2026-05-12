@@ -169,11 +169,13 @@ const Home = () => {
             </Stack> */}
             <Stack spacing={3} sx={{ bgcolor: 'common.white', p: 2 }}>
               <Typography sx={text18B}>{getAuthStore().name}</Typography>
-              <Stack direction={'row'} justifyContent={'right'} >
-                {/* <Stack direction={'row'} spacing={0.5}>
+              <Stack direction={'row'} justifyContent={'right'} spacing={2}>
+                { time>0 && (
+                <Stack direction={'row'} spacing={0.5}>
                   <Typography sx={text40}>{time}</Typography>
                   <Typography sx={{ ...text18, pt: 2.1 }}>분</Typography>
-                </Stack> */}
+                </Stack>
+                )}
                 <TButton
                   label='예약하기'
                   sx={{ width: 132, height: 40 }}

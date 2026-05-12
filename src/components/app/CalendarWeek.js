@@ -72,7 +72,7 @@ const CalendarWeek = ({ ymd, selected, handleCalendar }) => {
   );
 };
 
-const PERIOD = 4;
+const PERIOD = 7;
 const createWeekCalendarDate = (ymd) => {
   const dates = [];
   for (let i = 0; i < PERIOD; i++) {
